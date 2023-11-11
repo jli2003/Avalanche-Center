@@ -7,6 +7,7 @@
         "ejs-lint": "^0.3.0",
         "express": "^4.6.1",
         "express-session": "1.17.3",
+        "npm": "^10.2.3",
         "pg-promise": "^10.11.1"
     },
     "devDependencies": {
@@ -17,10 +18,10 @@
         "npm-run-all": "^4.1.5"
     },
     "scripts": {
-        "prestart": "npm install",
-        "start": "node index.js",
+        "install": "npm install npm@10.2.3",
+        "start": "nodemon index.js",
         "dev": "nodemon server.js",
         "test": "mocha",
-        "testandrun": "npm run prestart && npm run test"
+        "testandrun": "npm run test && npm run start"
     }
 }
