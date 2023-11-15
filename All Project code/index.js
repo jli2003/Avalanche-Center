@@ -96,33 +96,24 @@ app.get('/register', (req, res) => {
 
 // Define the POST route for user registration
 app.post('/register', async (req, res) => {
-  //update code with new database
+  // Hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
 
-   const hash = await bcrypt.hash(req.body.password, 10);
-   var query = "insert into users (username, password) values ($1, $2) returning *;";
-   var vals = [
-       req.body.username,
-       hash
-   ];
 
-   //Check if the username or password fields are empty
-   if (req.body.password === '' || req.body.username === '') {
-       console.error("fill out the fields");
-       return res.render('pages/register.ejs', {message: 'Please fill out the fields'});
-   } else {
-       // Insert the new user into the database
-       db.one(query, vals)
-           .then((data) => {
-               console.log(data);
-               // Redirect to the login page upon successful registration
-               return res.redirect('/login');
-           })
-           .catch((err) => {
-               // Redirect to the login page if there is an error
-               console.log(err);
-           });
-   }
-  res.redirect("/login");
+  const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+  
+  db.none(query, [req.body.username, hash])
+    .then(() => {
+      res.redirect('/login');
+    })
+    .catch( (err) => {
+      console.log(err);
+      res.redirect('/register');
+    });
+});
+
+app.get('/login', (req, res) => {
+  res.render('pages/login');
 });
 
 // Define the route to serve the login page
