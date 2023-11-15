@@ -6,6 +6,7 @@ const app = express();
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const bcrypt = require('bcrypt'); //  To hash passwords
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -49,6 +50,8 @@ app.use(
     extended: true,
   })
 );
+
+
 
 // *****************************************************
 // <!-- Section 3: all Api Calls-->
@@ -95,32 +98,30 @@ app.get('/register', (req, res) => {
 app.post('/register', async (req, res) => {
   //update code with new database
 
-  // TODO: Hash the password using bcrypt library before inserting it into the database
-  // const hash = await bcrypt.hash(req.body.password, 10);
-  // var query = "insert into users (username, password) values ($1, $2) returning *;";
-  // var vals = [
-  //     req.body.username,
-  //     hash
-  // ];
+   const hash = await bcrypt.hash(req.body.password, 10);
+   var query = "insert into users (username, password) values ($1, $2) returning *;";
+   var vals = [
+       req.body.username,
+       hash
+   ];
 
-  // Check if the username or password fields are empty
-  // if (req.body.password === '' || req.body.username === '') {
-  //     console.error("fill out the fields");
-  //     return res.render('pages/register.ejs', {message: 'Please fill out the fields'});
-  // } else {
-  //     // Insert the new user into the database
-  //     db.one(query, vals)
-  //         .then((data) => {
-  //             console.log(data);
-  //             // Redirect to the login page upon successful registration
-  //             return res.redirect('/login');
-  //         })
-  //         .catch((err) => {
-  //             // Redirect to the login page if there is an error
-  //             res.redirect("/login");
-  //             console.log(err);
-  //         });
-  // }
+   //Check if the username or password fields are empty
+   if (req.body.password === '' || req.body.username === '') {
+       console.error("fill out the fields");
+       return res.render('pages/register.ejs', {message: 'Please fill out the fields'});
+   } else {
+       // Insert the new user into the database
+       db.one(query, vals)
+           .then((data) => {
+               console.log(data);
+               // Redirect to the login page upon successful registration
+               return res.redirect('/login');
+           })
+           .catch((err) => {
+               // Redirect to the login page if there is an error
+               console.log(err);
+           });
+   }
   res.redirect("/login");
 });
 
@@ -133,83 +134,28 @@ app.get('/login', (req, res) => {
 // Define the POST route for user login
 app.post('/login', async (req, res) => {
 
-  // old code that needs to be updated with new database
+  const user = await db.one('SELECT * FROM users WHERE username = $1', [req.body.username]);
 
-  // try {
-  //     const { username, password } = req.body;
-  //     // Fetch the user from the database
-  //     const user = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+  if (user) 
+  {
+    // check if password from request matches with password in DB
+    const match = await bcrypt.compare(req.body.password, user.password);
+    
+    if (match)
+    {
+        req.session.user = user;
+        req.session.save();
 
-  //     // If user not found, prompt to register
-  //     if (user.length == 0) {
-  //         return res.render('pages/register.ejs', {message: 'Username not found'});
-  //     }
-
-  //     // Check if the provided password matches the stored hash
-  //     const matched = await bcrypt.compare(password, user[0].password);
-  //     if (matched) {
-  //         // Save user in session and redirect to discover page if the password is correct
-  //         req.session.user = user[0];
-  //         req.session.save(() => {
-  //             res.redirect('/home');
-  //         });
-  //     } else {
-  //         // If the password does not match, display an error message
-  //         return res.render('pages/login.ejs', {message: 'Incorrect Username or Password'})
-  //     }
-  // } catch (error) {
-  //     // Handle errors and display an error message
-  //     console.error('Error:', error);
-  //     res.status(500).send('Error logging in. Please try again.');
-  // }
-  return res.render('pages/login.ejs', {message: 'Incorrect Username or Password'});
-});
-
-// Authentication Middleware to check if the user is logged in
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-      return res.redirect('/login');
+        res.redirect('/home');
+    }
+    else
+    {
+      res.render('pages/login', {message: "Incorrect username or password." });
+    }
   }
-  next();
-};
-
-// Apply the authentication middleware to all subsequent routes
-app.use(auth);
-
-// Define the route to serve the discover page with event data
-// Route handler for '/discover' endpoint
-app.get('/home', async (req, res) => {
-  try {
-    // Using axios to make a GET request to the Ticketmaster API
-    const response = await axios.get('https://app.ticketmaster.com/discovery/v2/events.json', {
-      method: 'GET', // Specifying the request method
-      dataType: 'json', // Expecting JSON response
-      headers: {
-        'Accept-Encoding': 'application/json', // Setting header for JSON response
-      },
-      params: {
-        apikey: process.env.API_KEY, // API key from environment variables
-        keyword: 'Eagles', // Keyword for event search, can be any artist/event
-        size: 10 // Number of events to return, adjustable
-      }
-    })
-
-    // Logging successful request
-    console.log('Worked');
-    console.log(response.data._embedded.events[0].dates.start);
-    // Uncomment the line below to log the first date of the first event
-    // console.log(response.data._embedded.events[0].dates.start[0]);
-    
-    // Render 'discover.ejs' with events data
-    res.render('pages/home.ejs', { results: response.data._embedded.events });
-
-  } catch (error) {
-    // Logging and handling errors
-    console.error('Error:', error);
-    console.log('didnt work');
-    
-    // Render 'discover.ejs' with an empty results array in case of error
-    res.render('pages/home.ejs', { results: [] });
+  else
+  {
+    res.redirect('/register');
   }
 });
 
@@ -230,6 +176,21 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
   });
 });
+
+// Authentication Middleware to check if the user is logged in
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+      return res.redirect('/login');
+  }
+  next();
+};
+
+// Apply the authentication middleware to all subsequent routes
+app.use(auth);
+
+app.get('/home', async (req, res) => {
+  res.render('pages/home.ejs');
+    });
 
 
 // *****************************************************
