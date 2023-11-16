@@ -73,6 +73,28 @@ it('Negative: /login invalid password', async () => {
 });
 
 
+it('positive : /register', done => {
+  chai
+    .request(server)
+    .post('/register')
+    .send({username: 'New User', password: '123'})
+    .end((err, res) => {
+      expect(res).to.have.status(400);
+      done();
+    });
+});
+
+it('negative : /register', done => {
+  chai
+    .request(server)
+    .post('/register')
+    .send({username: 'John Doe', password: '123'})
+    .end((err, res) => {
+      expect(res).to.have.status(400);
+      done();
+    });
+});
+
 
 
 

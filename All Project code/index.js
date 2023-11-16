@@ -96,6 +96,14 @@ app.get('/register', (req, res) => {
 
 // Define the POST route for user registration
 app.post('/register', async (req, res) => {
+
+  const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
+
+  if (exists) {
+    res.status(400).render('pages/register', { message: "Username already exists" });
+    return;
+  }
+
   // Hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
 
