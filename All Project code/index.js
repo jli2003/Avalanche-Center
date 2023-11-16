@@ -144,6 +144,10 @@ app.post('/login', async (req, res) => {
         res.render('pages/login', { message: "Incorrect username or password." });
       }
     }
+    else
+    {
+      res.render('pages/login', {message: "Incorrect username or password."});
+    }
   } catch (error) {
     console.error('Error', error);
     res.status(500).render('error', { message: 'Error' });

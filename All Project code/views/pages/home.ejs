@@ -4,21 +4,10 @@
 <main>
   <div class="container">
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->    
-    <h1>Discover</h1>
+    <h1>Logged in sucessfully</h1>
     <div class="col"><%- include ('../partials/message') %></div>
         <div class="row">
-            <% results.forEach(event => { %>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="<%= event.images[0] ? event.images[0].url : 'https://m.media-amazon.com/images/M/MV5BZDE2ZjIxYzUtZTJjYS00OWQ0LTk2NGEtMDliYmI3MzMwYjhkXkEyXkFqcGdeQWFsZWxvZw@@._V1_.jpg' %>" class="card-img-top" alt="Event Image">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= event.name %></h5>
-                            <p>Date and Time: <%= event.dates.start.localDate %> - <%= event.dates.start.localTime %></p>
-                            <a href="<%= event.url %>" class="btn btn-primary">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-            <% }); %>
+            <img src="https://m.media-amazon.com/images/M/MV5BZDE2ZjIxYzUtZTJjYS00OWQ0LTk2NGEtMDliYmI3MzMwYjhkXkEyXkFqcGdeQWFsZWxvZw@@._V1_.jpg" alt="shrek">
         </div>
   </div>
 </main>
