@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE table users (
     username VARCHAR(50) PRIMARY KEY,
     password CHAR(60) NOT NULL,
-    user_type BOOL NOT NULL
+    user_type BIT NOT NULL
 );
 
 DROP TABLE IF EXISTS reports CASCADE;
