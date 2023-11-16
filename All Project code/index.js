@@ -100,7 +100,7 @@ app.post('/register', async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, 10);
 
 
-  const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+  const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'0\')';
   
   db.none(query, [req.body.username, hash])
     .then(() => {
@@ -112,10 +112,6 @@ app.post('/register', async (req, res) => {
     });
 });
 
-app.get('/login', (req, res) => {
-  res.render('pages/login');
-});
-
 // Define the route to serve the login page
 app.get('/login', (req, res) => {
   // Render the login page using EJS templating
@@ -124,31 +120,28 @@ app.get('/login', (req, res) => {
 
 // Define the POST route for user login
 app.post('/login', async (req, res) => {
+  try {
+    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
 
-  const user = await db.one('SELECT * FROM users WHERE username = $1', [req.body.username]);
+    if (user) {
+      // check if password from request matches with password in DB
+      const match = await bcrypt.compare(req.body.password, user.password);
 
-  if (user) 
-  {
-    // check if password from request matches with password in DB
-    const match = await bcrypt.compare(req.body.password, user.password);
-    
-    if (match)
-    {
+      if (match) {
         req.session.user = user;
         req.session.save();
 
         res.redirect('/home');
+      } else {
+        res.render('pages/login', { message: "Incorrect username or password." });
+      }
     }
-    else
-    {
-      res.render('pages/login', {message: "Incorrect username or password." });
-    }
-  }
-  else
-  {
-    res.redirect('/register');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
   }
 });
+
 
 // Route handler for '/logout' endpoint
 app.get('/logout', (req, res) => {
