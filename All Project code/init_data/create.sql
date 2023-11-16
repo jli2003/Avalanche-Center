@@ -1,14 +1,15 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE table users (
     username VARCHAR(50) PRIMARY KEY,
-    password CHAR(60) NOT NULL
+    password CHAR(60) NOT NULL,
+    user_type BIT NOT NULL
 );
 
 DROP TABLE IF EXISTS reports CASCADE;
 CREATE TABLE reports(
     report_id INT PRIMARY KEY,
     observations TEXT NOT NULL,
-    date DATE NOT NULL
+    date DATETIME NOT NULL
 );
 
 DROP TABLE IF EXISTS reports_to_user CASCADE;
