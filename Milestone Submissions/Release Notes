@@ -1,0 +1,8 @@
+Version 1.02
+
+- Added HTML page and updated with formatting for the home page
+- Added register routes
+- Added Login and logout routes
+- Added SQL Schema for reports and users as well as crosswalk
+- Navigation between login and home pages
+- Fixed: docker-compose statement not running for everyone (npm run -> start)
