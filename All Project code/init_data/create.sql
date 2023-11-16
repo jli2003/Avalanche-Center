@@ -4,11 +4,17 @@ CREATE table users (
     password CHAR(60) NOT NULL
 );
 
-/*DROP TABLE IF EXISTS reports CASCADE;
+DROP TABLE IF EXISTS reports CASCADE;
 CREATE TABLE reports(
     report_id INT PRIMARY KEY,
     observations TEXT NOT NULL,
-    date DATE NOT NULL,
+    date DATE NOT NULL
+);
+
+DROP TABLE IF EXISTS reports_to_user CASCADE;
+CREATE TABLE reports_to_user (
     username VARCHAR(50) NOT NULL,
-    FOREIGN KEY (username) REFERENCES users (username)   
-);*/
+    report_id INT NOT NULL,
+    FOREIGN KEY (username) REFERENCES users (username),
+    FOREIGN KEY (report_id) REFERENCES reports (report_id)
+);
