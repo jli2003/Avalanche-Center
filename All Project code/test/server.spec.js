@@ -75,6 +75,7 @@ it('Negative: /login invalid password', async () => {
 
 it('positive : /register', done => {
   chai
+
     .request(server)
     .post('/register')
     .send({username: 'New User', password: '123'})
