@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS reports CASCADE;
 CREATE TABLE reports(
     report_id INT PRIMARY KEY,
     observations TEXT NOT NULL,
-    date DATETIME NOT NULL
+    date TIMESTAMPTZ NOT NULL
 );
 
 DROP TABLE IF EXISTS reports_to_user CASCADE;
