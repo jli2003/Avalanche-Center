@@ -1,6 +1,5 @@
-/*-- INSERT INTO users (username, email, password, user_type) VALUES
 
-
+/*
 INSERT INTO reports (report_id, observations, date, image_path, location) VALUES 
 (1, 'Observation detail here', '2023-11-14 10:00:00+00', '/images/report1.jpg', 'Location 1'),
 (2, 'Another observation detail', '2023-11-14 11:00:00+00', '/images/report2.jpg', 'Location 2'),
