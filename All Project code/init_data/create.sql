@@ -10,9 +10,9 @@ DROP TABLE IF EXISTS reports CASCADE;
 CREATE TABLE reports(
     report_id INT PRIMARY KEY,
     observations VARCHAR(250) NOT NULL,
-    date TIMESTAMPTZ NOT NULL
+    date TIMESTAMPTZ NOT NULL,
     image_path VARCHAR(200),
-    location VARCHAR(100),
+    location VARCHAR(100)
     
 );
 
