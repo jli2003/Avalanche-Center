@@ -177,6 +177,65 @@ app.get('/home', async (req, res) => {
   res.render('pages/home.ejs');
     });
 
+
+//------------------------------------Features not needing login-------------------------------------
+
+
+
+
+// Endpoint to get the count of reports for the current date
+app.get('/reportsCount', async (req, res) => {
+  try {
+    // Get the current date in the format 'YYYY-MM-DD'
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    // Query the database to get the count of reports for the current date
+    const result = await db.oneOrNone('SELECT COUNT(*) FROM reports WHERE date::date = $1', [currentDate]);
+
+    res.json({ count: result ? result.count : 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Endpoint to update avy danger description
+app.post('/avyDangerDescription', async (req, res) => {
+  const { description } = req.body;
+  try {
+    // Update the avy danger description in the database
+    await db.none('UPDATE your_table_name SET avy_danger_description = $1', [description]);
+
+    res.json({ message: 'Avy danger description updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Endpoint to update avy type
+app.post('/avyType', async (req, res) => {
+  const { avyType } = req.body;
+
+  try {
+    // Update the avy type in the database
+    await db.none('UPDATE your_table_name SET avy_type = $1', [avyType]);
+
+    res.json({ message: 'Avy type updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+//----------------------^^^^^^^^^^Features not needing login^^^^^^^^^^^----------------
+
+
+
+
+
 // Authentication Middleware to check if the user is logged in
 const auth = (req, res, next) => {
   if (!req.session.user) {
@@ -187,6 +246,17 @@ const auth = (req, res, next) => {
 
 // Apply the authentication middleware to all subsequent routes
 app.use(auth);
+
+
+
+//------------------------------------Requiring login------------------------------------
+
+
+
+
+
+
+//------------------------------------^^^^^^^^^Requiring login^^^^^^^^^^^------------------------------------
 
 
 // *****************************************************

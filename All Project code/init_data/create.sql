@@ -23,3 +23,31 @@ CREATE TABLE reports_to_user (
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (report_id) REFERENCES reports (report_id)
 );
+
+CREATE OR DROP TYPE avalanche_type AS ENUM (
+  'wind_slab',
+  'storm_slab',
+  'wet_slab',
+  'dry_loose',
+  'wet_loose',
+  'persistent_slab',
+  'none'
+);
+
+CREATE OR DROP TYPE danger_rating AS ENUM (
+  'low',
+  'medium',
+  'high',
+  'extreme'
+);
+
+DROP TABLE IF EXISTS home_reports CASCADE;
+CREATE TABLE home_reports (
+  report_id SERIAL PRIMARY KEY,
+  image_path VARCHAR(200),
+  location VARCHAR(100),
+  avy_type avalanche_type NOT NULL,
+  danger_rating danger_rating NOT NULL,
+  observations VARCHAR(250) NOT NULL,
+  date TIMESTAMPTZ NOT NULL
+);
