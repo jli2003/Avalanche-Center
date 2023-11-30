@@ -47,14 +47,39 @@ it('positive : /add_user', done => {
 });
 
 
+it('positive : /register', done => {
+  chai
+    .request(server)
+    .post('/register')
+    .send({username: 'New User', password: '123'})
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.redirects[0]).to.equal('http://127.0.0.1:3000/login');
+      done();
+    });
+});
+
+
+it('negative : /register', done => {
+  chai
+    .request(server)
+    .post('/register')
+    .send({username: 'New User', password: '23o23o32invalid'})
+    .end((err, res) => {
+      expect(res).to.have.status(400);
+      done();
+    });
+});
+
+
 it('positive: /login', async () => {
-  const hash = await bcrypt.hash('jerry', 10); //using hashed password
+  const hash = await bcrypt.hash('123', 10); //using hashed password
 
 
   chai
     .request(server)
     .post('/login')
-    .send({ username: 'jerry', password: hash })
+    .send({ username: 'New User', password: hash })
     .end((err, res) => {
       expect(res).to.have.status(200);
       if (res.redirects && res.redirects.length > 0)
@@ -69,7 +94,7 @@ it('Negative: /login invalid password', async () => {
   chai
     .request(server)
     .post('/login')
-    .send({ username: 'jerry', password: 'invalid'})
+    .send({ username: 'New User', password: 'invalid'})
     .end((err, res) => {
       expect(res).to.have.status(200);
       if (res.redirects && res.redirects.length > 0)
@@ -78,48 +103,6 @@ it('Negative: /login invalid password', async () => {
       }
     });
 });
-
-
-/*need to delete New User if exists
-it('positive : /register', done => {
-  chai
-
-
-    .request(server)
-    .post('/register')
-    .send({username: 'New User', password: '123'})
-    .end((err, res) => {
-      expect(res).to.have.status(200);
-      expect(res.redirects[0]).to.equal('/login');
-      done();
-    });
-});
-
-
-
-
-it('negative : /register', done => {
-  chai
-    .request(server)
-    .post('/register')
-    .send({username: 'New User', password: '23o23o32invalid'})
-    .end((err, res) => {
-      expect(res).to.have.status(400);
-      done();
-    });
-});
-*/
-
-
-
-
-
-
-
-
-
-
-
 
 //We are checking POST /add_user API by passing the user info in in incorrect manner (name cannot be an integer). This test case should pass and return a status 200 along with a "Invalid input" message.
 it('Negative : /add_user. Checking invalid name', done => {
