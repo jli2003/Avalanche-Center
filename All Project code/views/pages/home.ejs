@@ -1,15 +1,116 @@
+<!-- index.html -->
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu') %>
 
+<!DOCTYPE html>
+<html>
+<style>
+  /* Your CSS styles go here */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+
+
+  .user-profile {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  #profile-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .user-profile-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .high-text {
+    color: red;
+  }
+
+  h1 {
+    color: #333;
+  }
+
+  h2 {
+    color: #ff6347;
+    margin-top: 10px;
+  }
+
+  .row img {
+    max-width: 80%;
+    display: block;
+    margin: 20px auto;
+  }
+
+  .info-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px; /* Add margin at the bottom */
+  }
+
+  .info-box p {
+    margin: 0;
+    color: #555;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  footer {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+  }
+</style>
+
+<script src="/All%20Project%20code/src/resources/script.js"></script>
+
 <main>
   <div class="container">
+    <div class="user-profile">
+      <img id="profile-icon" src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="Profile Icon" onclick="openUserProfile()">
+      <div id="user-profile-menu" class="user-profile-menu">
+      </div>
+    </div>
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->    
-    <h1>Logged in sucessfully</h1>
+    <h1>Avalanche Conditions & Forecasts</h1>
+    <h2>Danger: <span class="high-text">High</span></h2>
+
     <div class="col"><%- include ('../partials/message') %></div>
-        <div class="row">
-            <img src="https://m.media-amazon.com/images/M/MV5BZDE2ZjIxYzUtZTJjYS00OWQ0LTk2NGEtMDliYmI3MzMwYjhkXkEyXkFqcGdeQWFsZWxvZw@@._V1_.jpg" alt="shrek">
-        </div>
+    <div class="row">
+        <img src="https://bloximages.newyork1.vip.townnews.com/denvergazette.com/content/tncms/assets/v3/editorial/f/16/f16e7743-1ac0-5fe0-b36b-c80ded1bde0f/645d9d249e988.image.png?resize=795%2C490" alt="avalanche map">
+    </div>
+  </div>
+  <div class="info-box">
+    <p>Reports today: 3, Avy type: wind slab, and Tips: Be careful on the NE aspect, wind loaded on November facets.</p>
   </div>
 </main>
+<footer>
+  <!-- Your footer content goes here -->
+  © 2023 Your Company Name. All rights reserved.
+</footer>
+</html>
 
 <%- include ('../partials/footer') %>

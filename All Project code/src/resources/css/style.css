@@ -1,0 +1,23 @@
+.user-profile {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  #profile-icon {
+    width: 40px; /* Adjust the size as needed */
+    height: 40px;
+    cursor: pointer;
+  }
+  
+  .user-profile-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
