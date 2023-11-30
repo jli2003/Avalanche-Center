@@ -173,6 +173,10 @@ app.get('/logout', (req, res) => {
   });
 });
 
+app.get('/home', async (req, res) => {
+  res.render('pages/home.ejs');
+    });
+
 // Authentication Middleware to check if the user is logged in
 const auth = (req, res, next) => {
   if (!req.session.user) {
@@ -183,10 +187,6 @@ const auth = (req, res, next) => {
 
 // Apply the authentication middleware to all subsequent routes
 app.use(auth);
-
-app.get('/home', async (req, res) => {
-  res.render('pages/home.ejs');
-    });
 
 
 // *****************************************************
