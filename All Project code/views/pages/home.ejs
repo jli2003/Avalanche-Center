@@ -72,7 +72,7 @@
   .info-box p {
     margin: 0;
     color: #555;
-    font-size: 18px;
+    font-size: 24px;
     line-height: 1.6;
   }
 
@@ -96,15 +96,27 @@
     </div>
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->    
     <h1>Avalanche Conditions & Forecasts</h1>
-    <h2>Danger: <span class="high-text">High</span></h2>
 
     <div class="col"><%- include ('../partials/message') %></div>
     <div class="row">
+        <!-- <img src="/All%20Project%20code/src/resources/img/buffAvyDrawing.JPG" alt="avalanche map"> -->
         <img src="https://bloximages.newyork1.vip.townnews.com/denvergazette.com/content/tncms/assets/v3/editorial/f/16/f16e7743-1ac0-5fe0-b36b-c80ded1bde0f/645d9d249e988.image.png?resize=795%2C490" alt="avalanche map">
     </div>
   </div>
-  <div class="info-box">
-    <p>Reports today: 3, Avy type: wind slab, and Tips: Be careful on the NE aspect, wind loaded on November facets.</p>
+    <div class="info-box">
+      
+      <!-- <p><strong>Avy Problem:</strong> wind slab / Persistent Slab </p>
+      <p><strong>Synopsis:</strong> N aspect highly reactive with persitent slabs that have been wind loaded, NE moderate, the safest slopes are the thin S-W's.</p> -->
+
+      <% if (latestAvyProblem) { %>
+        <p><strong>Danger Rating:</strong> <%= latestAvyProblem.danger_rating %></p>
+        <p><strong>Avy Problem:</strong> <%= latestAvyProblem.avalanche_type %></p>
+        <p><strong>Synopsis:</strong> <%= latestAvyProblem.synopsis %></p>
+      <% } else { %>
+        <p>No data available.</p>
+      <% } %>
+
+    </div>
   </div>
 </main>
 <footer>
