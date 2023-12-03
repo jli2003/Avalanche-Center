@@ -214,7 +214,8 @@ const userAuth = (req, res, next) => {
 };
 
 // Apply the authentication middleware to all subsequent routes
-app.use(userAuth);
+//TODO: UNCOMMENT WHEN TESTING COMPLETE
+// app.use(userAuth);
 
 
 
@@ -236,6 +237,7 @@ const adminAuth = (req, res, next) => {
 
   // Check if the user is an admin (user_type = 1)
   if (req.session.user.user_type !== 1) {
+    console.log('User is not an admin');
     return res.redirect('/login');
   }
 
@@ -243,14 +245,55 @@ const adminAuth = (req, res, next) => {
 };
 
 // Apply the authentication middleware to all subsequent routes
-app.use(adminAuth);
+//TODO: UNCOMMENT WHEN TESTING COMPLETE
+// app.use(adminAuth);
 
 //------------------------------------Requiring Admin login------------------------------------
 
 
+app.get('/adminControls', async (req, res) => {
+  try {
+    // Render the admin controls page
+    res.render('pages/adminControls');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error loading admin controls page' });
+  }
+});
 
+app.post('/admin/updateHome', async (req, res) => {
+  try {
+    // Extract form data for updating home page
+    const { imagePath, dangerRating, avalancheType, synopsis } = req.body;
 
+    // Add your database query to update the home page
+    // Example query:
+    await db.none('UPDATE home_reports SET image_path = $1, danger_rating = $2, avalanche_type = $3, synopsis = $4', [imagePath, dangerRating, avalancheType, synopsis]);
 
+    // Redirect to the admin controls page after the update
+    res.redirect('/adminControls');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+  }
+});
+
+// Add this route handler to your existing code
+app.post('/admin/changeToAdmin', async (req, res) => {
+  try {
+    // Extract the username to change to admin from the form
+    const { username } = req.body;
+
+    // Update the user_type to make the user an admin (Assuming 1 represents admin)
+    await db.none('UPDATE users SET user_type = B\'1\' WHERE username = $1', [username]);
+
+    // Redirect to the admin controls page after the update
+    res.redirect('/adminControls');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+  }
+});
 
 //------------------------------------^^^^^^^^^Requiring Admin login^^^^^^^^^^^------------------------------------
 

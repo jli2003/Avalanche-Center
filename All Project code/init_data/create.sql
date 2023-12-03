@@ -7,7 +7,7 @@ CREATE table users (
 );
 
 DROP TABLE IF EXISTS user_reports CASCADE;
-CREATE TABLE reports(
+CREATE TABLE user_reports (
     report_id SERIAL PRIMARY KEY,
     observations VARCHAR(250) NOT NULL,
     date TIMESTAMPTZ NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE reports_to_user (
     username VARCHAR(100) NOT NULL,
     report_id INT NOT NULL,
     FOREIGN KEY (username) REFERENCES users (username),
-    FOREIGN KEY (report_id) REFERENCES reports (report_id)
+    FOREIGN KEY (report_id) REFERENCES user_reports (report_id)
 );
 
 DROP TABLE IF EXISTS home_reports CASCADE;
