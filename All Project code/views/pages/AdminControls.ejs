@@ -1,0 +1,49 @@
+<!-- views/pages/adminControls.ejs -->
+
+<%- include('../partials/head') %>
+<%- include('../partials/menu') %>
+
+<h1>Admin Controls</h1>
+
+<!-- Section for updating home page -->
+<h2>Update Home Page</h2>
+<form method="post" action="/admin/updateHome">
+  <!-- Add form fields for updating home page -->
+  <div class="form-section">
+    <label for="imagePath">Image Path:</label>
+    <input type="text" id="imagePath" name="imagePath" required>
+  </div>
+
+  <div class="form-section">
+    <label for="dangerRating">Danger Rating:</label>
+    <input type="text" id="dangerRating" name="dangerRating" required>
+  </div>
+
+  <div class="form-section">
+    <label for="avalancheType">Avalanche Type:</label>
+    <input type="text" id="avalancheType" name="avalancheType" required>
+  </div>
+
+  <div class="form-section">
+    <label for="synopsis">Synopsis:</label>
+    <textarea id="synopsis" name="synopsis" required></textarea>
+  </div>
+
+  <button type="submit">Update Home Page</button>
+</form>
+
+<!-- Add spacing between sections -->
+<div class="section-spacing"></div>
+
+<!-- Section for changing user to admin -->
+<h2>Change User to Admin</h2>
+<form method="post" action="/admin/changeToAdmin">
+  <div class="form-section">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+  </div>
+
+  <button type="submit">Change to Admin</button>
+</form>
+
+<%- include('../partials/footer') %>
