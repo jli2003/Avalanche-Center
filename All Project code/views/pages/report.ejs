@@ -1,0 +1,98 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avalanche Register Form</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #b3e0ff; /* Light blue background */
+    }
+
+    main {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    h1, h2 {
+      color: #4d94ff; /* Darker blue text */
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+    }
+
+    label {
+      margin-bottom: 8px;
+      color: #3366cc; /* Blue label color */
+    }
+
+    input {
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #3366cc; /* Blue border */
+      border-radius: 10px;
+      transition: border-color 0.3s;
+      width: 100%;
+      box-sizing: border-box;
+      padding-left: 40px; /* Space for the snowflake icon */
+    }
+
+    input:focus {
+      border-color: #1a45a5; /* Darker blue on focus */
+    }
+
+    .snowflake-icon {
+      position: absolute;
+      margin-top: 16px;
+      margin-left: 12px;
+      color: #1a45a5;
+    }
+
+    .blue-button {
+      background-color: #1a45a5; /* Dark blue button */
+      color: #ffffff;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .blue-button:hover {
+      background-color: #0c2b66; /* Even darker blue on hover */
+    }
+
+    p {
+      color: #3366cc; /* Blue text color */
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<h1 style="text-align: center; color: #4d94ff; margin-top: 20px;">Avalanche Weather Report</h1>
+
+<%- include ('../partials/footer') %>
+</body>
+</html>

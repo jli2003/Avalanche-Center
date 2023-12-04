@@ -83,9 +83,20 @@ app.post('/add_user', async (req, res) => {
 // original code for login and register pages
 
 // Define the route for the root path
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   // Redirect to the register route
-  return res.redirect('/register');
+  try {
+    const hash = await bcrypt.hash("admin", 10);
+
+    const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\')';
+    const values = ['admin', hash];
+
+    await db.none(query, values);
+
+    return res.redirect('/register');
+  } catch (error){
+    console.error('Error', error);
+  }
 });
 
 // Define the route to serve the registration page
@@ -186,6 +197,10 @@ app.get('/home', async (req, res) => {
   }
 });
 
+app.get('/reports_page', (req, res) => {
+  // Render the registration page using EJS templating
+  res.render('pages/report.ejs');
+});
 
 
 //------------------------------------Features not needing login-------------------------------------
