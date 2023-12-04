@@ -1,3 +1,6 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,13 +16,7 @@
       background-color: #f0f8ff; /* Light blue background */
     }
 
-    header {
-      background-color: #4169e1; /* Royal blue header */
-      color: #ffffff;
-      text-align: center;
-      padding: 15px;
-      font-size: 24px;
-    }
+    
 
     main {
       display: flex;
@@ -94,16 +91,13 @@
     }
 
     #addReportButton {
-      background-color:darkblue; /* Royal blue button */
+      background-color: darkblue; /* Royal blue button */
       color: #ffffff;
       padding: 10px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
-      position: absolute;
-      top: 10px;
-      right: 10px;
     }
 
     #addReportButton:hover {
@@ -127,11 +121,13 @@
 
 <body>
   <header>
-    Avalanche Reports Page
+    <!-- No Style Applied Header -->
   </header>
 
   <main>
-    <button id="addReportButton" onclick="toggleAddReportForm()">Add Report</button>
+    <h1>Avalanche Reports Page</h1>
+
+    <button id="addReportButton" onclick="toggleAddReportForm()" style="position: absolute; top: 70px; right: 10px;">Add Report</button>
 
     <form method="post" action="/reports/add">
       <label for="report_id">Report ID:</label>
@@ -174,6 +170,7 @@
       form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
     }
   </script>
+  <%- include ('../partials/footer') %>
 </body>
 
 </html>
