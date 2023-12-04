@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avalanche Register Form</title>
+
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -90,8 +90,31 @@
   </style>
 </head>
 <body>
-
-<h1 style="text-align: center; color: #4d94ff; margin-top: 20px;">Avalanche Weather Report</h1>
+  <main>
+    <form method="post" action="/reports/add">
+      <!-- Add form fields for updating home page -->
+      <div class="form-section">
+        <label for="imagePath">report id:</label>
+        <input type="text" id="report_id" name="report_id" required>
+      </div>
+      <div class="form-section">
+        <label for="imagePath">observations:</label>
+        <input type="text" id="observations" name="observations" required>
+      </div>
+      <div class="form-section">
+        <label for="imagePath">date:</label>
+        <input type="time" class="form-control" value="time" />
+      </div> 
+      <div class="form-section">
+        <label for="imagePath">Image Path:</label>
+        <input type="text" id="Image Path" name="Image Path" required>
+      </div>
+      <div class="form-section">
+        <label for="imagePath">location:</label>
+        <input type="text" id="location" name="location" required>
+      </div>
+      <input type="submit" value="Submit" class="blue-button" />
+  </main>
 
 <%- include ('../partials/footer') %>
 </body>
