@@ -297,8 +297,36 @@ app.post('/admin/changeToAdmin', async (req, res) => {
 
 //------------------------------------^^^^^^^^^Requiring Admin login^^^^^^^^^^^------------------------------------
 
+//------------------------------------^^^^^^^^^    repots     ^^^^^^^^^^^^^-----------------------------------
 
+app.get('/reports', async (req, res) => {
+  try {
+    // Render the admin controls page
+    res.render('pages/reports');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error loading reports page' });
+  }
+});
 
+app.post("/reports/add", async (req, res) => {
+  try {
+    // Extract form data for updating home page
+    const { report_id, observations,  date, image_path, location } = req.body;
+
+    // Add your database query to update the home page
+    // Example query:
+    await db.none('UPDATE user_reports SET report_id = $1, observations = $2, date = $3, image_path = $4, location = $5', [report_id, observations,  date, image_path, location]);
+
+    // Redirect to home page after the update
+    res.redirect('/home');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+  }
+});
+
+//------------------------------------^^^^^^^^^    repots     ^^^^^^^^^^^^^-----------------------------------
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
