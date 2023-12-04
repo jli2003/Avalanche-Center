@@ -6,3 +6,4 @@ Version 1.02
 - Added SQL Schema for reports and users as well as crosswalk
 - Navigation between login and home pages
 - Fixed: docker-compose statement not running for everyone (npm run -> start)
+- Added link: http://recitation-012-team-02.eastus.cloudapp.azure.com:3000/register

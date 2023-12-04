@@ -44,3 +44,7 @@ Follow these steps to set up and run the application locally:
 
 To run the application locally, follow these instructions:
 1. Open your web browser and access the application at `http://localhost:3000`
+
+## Online Link
+http://recitation-012-team-02.eastus.cloudapp.azure.com:3000/register
+
