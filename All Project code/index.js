@@ -111,7 +111,7 @@ app.post('/register', async (req, res) => {
   const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
 
   if (exists) {
-    res.status(400).render('pages/register', { message: "Username already exists" });
+    res.status(400).render('pages/register.ejs', { message: "Username already exists" });
     return;
   }
 
@@ -152,12 +152,12 @@ app.post('/login', async (req, res) => {
 
         res.redirect('/home');
       } else {
-        res.render('pages/login', { message: "Incorrect username or password." });
+        res.status(400).render('pages/login', { message: "Incorrect username or password." });
       }
     }
     else
     {
-      res.render('pages/login', {message: "Incorrect username or password."});
+      res.status(400).render('pages/login', {message: "Incorrect username or password."});
     }
   } catch (error) {
     console.error('Error', error);
