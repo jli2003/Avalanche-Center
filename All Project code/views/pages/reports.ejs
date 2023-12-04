@@ -1,0 +1,37 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+  <form method="post" action="/reports/add">
+    <!-- Add form fields for updating home page -->
+    <div class="form-section">
+      <label for="imagePath">report id:</label>
+      <input type="text" id="report_id" name="report_id" required>
+    </div>
+    <div class="form-section">
+      <label for="imagePath">observations:</label>
+      <input type="text" id="observations" name="observations" required>
+    </div>
+    <div class="form-section">
+      <label for="imagePath">date:</label>
+      <input type="time" class="form-control" value="time" />
+    </div> 
+    <div class="form-section">
+      <label for="imagePath">Image Path:</label>
+      <input type="text" id="Image Path" name="Image Path" required>
+    </div>
+    <div class="form-section">
+      <label for="imagePath">location:</label>
+      <input type="text" id="location" name="location" required>
+    </div>
+    <input type="submit" value="Submit" class="blue-button" />
+</main>
+
+<!--
+report_id SERIAL PRIMARY KEY,
+observations VARCHAR(250) NOT NULL,
+date TIMESTAMPTZ NOT NULL,
+image_path VARCHAR(200),
+location VARCHAR(100) -->
+
+<%- include ('../partials/footer') %>
