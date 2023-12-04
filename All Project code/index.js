@@ -197,11 +197,6 @@ app.get('/home', async (req, res) => {
   }
 });
 
-app.get('/reports_page', (req, res) => {
-  // Render the registration page using EJS templating
-  res.render('pages/report.ejs');
-});
-
 
 //------------------------------------Features not needing login-------------------------------------
 
