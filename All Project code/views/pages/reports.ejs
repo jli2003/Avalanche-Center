@@ -1,12 +1,10 @@
-<%- include ('../partials/head') %>
-<%- include ('../partials/menu') %>
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <title>Reports Page</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -15,23 +13,27 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      height: 100vh;
-      background-color: #b3e0ff; /* Light blue background */
+      min-height: 100vh;
+      background-color: #f4f4f4; /* Light gray background */
     }
 
     main {
-      background-color: #ffffff;
+      background-color: #fff;
       padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-      width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      width: 600px;
       text-align: center;
-      margin-top: 20px;
+      margin: 20px;
     }
 
     h1, h2 {
-      color: #4d94ff; /* Darker blue text */
+      color: #333;
       margin-bottom: 20px;
+    }
+
+    #addReportForm {
+      display: none;
     }
 
     form {
@@ -42,37 +44,29 @@
 
     label {
       margin-bottom: 8px;
-      color: #3366cc; /* Blue label color */
+      color: #555;
     }
 
     input {
       padding: 12px;
       margin-bottom: 16px;
-      border: 1px solid #3366cc; /* Blue border */
-      border-radius: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
       transition: border-color 0.3s;
       width: 100%;
       box-sizing: border-box;
-      padding-left: 40px; /* Space for the snowflake icon */
     }
 
     input:focus {
-      border-color: #1a45a5; /* Darker blue on focus */
-    }
-
-    .snowflake-icon {
-      position: absolute;
-      margin-top: 16px;
-      margin-left: 12px;
-      color: #1a45a5;
+      border-color: #1a45a5;
     }
 
     .blue-button {
-      background-color: #1a45a5; /* Dark blue button */
-      color: #ffffff;
+      background-color: #1a45a5;
+      color: #fff;
       padding: 12px;
       border: none;
-      border-radius: 10px;
+      border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
       width: 100%;
@@ -80,42 +74,92 @@
     }
 
     .blue-button:hover {
-      background-color: #0c2b66; /* Even darker blue on hover */
+      background-color: #0c2b66;
     }
 
-    p {
-      color: #3366cc; /* Blue text color */
-      margin-top: 16px;
+    #reports {
+      margin-top: 30px;
+    }
+
+    .report {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      text-align: left;
+    }
+
+    #addReportButton {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #1a45a5;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #addReportButton:hover {
+      background-color: #0c2b66;
     }
   </style>
 </head>
+
 <body>
   <main>
-    <form method="post" action="/reports/add">
-      <!-- Add form fields for updating home page -->
-      <div class="form-section">
-        <label for="imagePath">report id:</label>
-        <input type="text" id="report_id" name="report_id" required>
+    <h1>Reports Page</h1>
+
+    <button id="addReportButton" onclick="toggleAddReportForm()">Add Report</button>
+
+    <div id="addReportForm">
+      <h2>Add Report</h2>
+      <form method="post" action="/reports/add">
+        <div class="form-section">
+          <label for="report_id">Report ID:</label>
+          <input type="text" id="report_id" name="report_id" required>
+        </div>
+        <div class="form-section">
+          <label for="observations">Observations:</label>
+          <input type="text" id="observations" name="observations" required>
+        </div>
+        <div class="form-section">
+          <label for="date">Date:</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+        <div class="form-section">
+          <label for="imagePath">Image Path:</label>
+          <input type="text" id="imagePath" name="imagePath" required>
+        </div>
+        <div class="form-section">
+          <label for="location">Location:</label>
+          <input type="text" id="location" name="location" required>
+        </div>
+        <input type="submit" value="Submit" class="blue-button" />
+      </form>
+    </div>
+
+    <div id="reports">
+      <h2>Current Reports</h2>
+      <div class="report">
+        <strong>Report ID:</strong> 001<br>
+        <strong>Observations:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
+        <strong>Date:</strong> 2023-12-01<br>
+        <strong>Image Path:</strong> /images/report001.jpg<br>
+        <strong>Location:</strong> City Park
       </div>
-      <div class="form-section">
-        <label for="imagePath">observations:</label>
-        <input type="text" id="observations" name="observations" required>
-      </div>
-      <div class="form-section">
-        <label for="imagePath">date:</label>
-        <input type="time" class="form-control" value="time" />
-      </div> 
-      <div class="form-section">
-        <label for="imagePath">Image Path:</label>
-        <input type="text" id="Image Path" name="Image Path" required>
-      </div>
-      <div class="form-section">
-        <label for="imagePath">location:</label>
-        <input type="text" id="location" name="location" required>
-      </div>
-      <input type="submit" value="Submit" class="blue-button" />
+      <!-- Add more reports as needed -->
+    </div>
   </main>
 
-<%- include ('../partials/footer') %>
+  <script>
+    function toggleAddReportForm() {
+      var addReportForm = document.getElementById("addReportForm");
+      addReportForm.style.display = (addReportForm.style.display === "none" || addReportForm.style.display === "") ? "block" : "none";
+    }
+  </script>
 </body>
+
 </html>
