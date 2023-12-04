@@ -78,7 +78,7 @@ describe('Register', () => {
 });
 
 
-//------------------------------------------LOGIN TEST CASES---------------------------------------\\
+//------------------------------------------LOGIN & LOGOUT TEST CASES---------------------------------------\\
 describe('Login', () => {
   it('positive : /login', done => {
     chai
@@ -113,8 +113,43 @@ describe('Login', () => {
       });
   });
 
+  it('positive : /logout successful', done => {
+    chai
+    .request(server)
+    .get('/logout')
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      done();
+    });
+  })
+
 });
 
+//------------------------------------------HOME & ADMIN TEST CASES---------------------------------------\\
+describe('Home', () => {
+  it('positive : /home', done => {
+    chai
+      .request(server)
+      .get('/home')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+
+  it('positive : Home Page Update', done => {
+    chai
+      .request(server)
+      .post('/admin/updateHome')
+      .send({imagePath: 'https://m.media-amazon.com/images/M/MV5BZDE2ZjIxYzUtZTJjYS00OWQ0LTk2NGEtMDliYmI3MzMwYjhkXkEyXkFqcGdeQWFsZWxvZw@@._V1_.jpg', dangerRating: 'HIGH', avalancheType: 'wind slab', synopsis: 'shrek'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+});
 
 
 
