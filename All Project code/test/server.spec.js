@@ -78,7 +78,8 @@ describe('Register', () => {
 });
 
 
-//------------------------------------------LOGIN TEST CASES---------------------------------------\\
+
+//------------------------------------------LOGIN & LOGOUT TEST CASES---------------------------------------\\
 describe('Login', () => {
   it('positive : /login', done => {
     chai
@@ -101,7 +102,7 @@ describe('Login', () => {
         done();
       });
   });
-
+  
   it('negative : /login user unknown', done => {
     chai
       .request(server)
@@ -113,9 +114,73 @@ describe('Login', () => {
       });
   });
 
+
+  it('positive : /logout successful', done => {
+    chai
+    .request(server)
+    .get('/logout')
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+=======
 });
 
+  //------------------------------------------DELETE USERS TEST CASES---------------------------------------\\
 
 
+  it('positive: /delete_user', done => {
+    chai
+    .request(server)
+    .delete('/delete_user')
+    .send({ username: 'New User' })
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+
+  it('negative: /delete_user user does not exist', done => {
+    chai
+    .request(server)
+    .delete('/delete_user')
+    .send({ username: 'escensceINVALID' })
+    .end((err, res) => {
+      expect(res).to.have.status(400);
+      done();
+    });
+  });
+
+  });
+  
+
+
+
+//------------------------------------------HOME & ADMIN TEST CASES---------------------------------------\\
+/*
+describe('Admin', () => {
+  it('positive : /adminControls', done => {
+    chai
+      .request(server)
+      .get('/adminControls')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+  it('positive : Home Page Update', done => {
+    chai
+      .request(server)
+      .post('/admin/updateHome')
+      .send({imagePath: 'https://m.media-amazon.com/images/M/MV5BZDE2ZjIxYzUtZTJjYS00OWQ0LTk2NGEtMDliYmI3MzMwYjhkXkEyXkFqcGdeQWFsZWxvZw@@._V1_.jpg', dangerRating: 'HIGH', avalancheType: 'wind slab', synopsis: 'shrek'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+}); */
 
 
