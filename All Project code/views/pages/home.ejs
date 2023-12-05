@@ -89,11 +89,7 @@
 
 <main>
   <div class="container">
-    <div class="user-profile">
-      <img id="profile-icon" src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="Profile Icon" onclick="openUserProfile()">
-      <div id="user-profile-menu" class="user-profile-menu">
-      </div>
-    </div>
+    
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->    
     <h1>Avalanche Conditions & Forecasts</h1>
 
@@ -107,14 +103,19 @@
       
       <!-- <p><strong>Avy Problem:</strong> wind slab / Persistent Slab </p>
       <p><strong>Synopsis:</strong> N aspect highly reactive with persitent slabs that have been wind loaded, NE moderate, the safest slopes are the thin S-W's.</p> -->
-
-      <% if (latestAvyProblem) { %>
-        <p><strong>Danger Rating:</strong> <%= latestAvyProblem.danger_rating %></p>
-        <p><strong>Avy Problem:</strong> <%= latestAvyProblem.avalanche_type %></p>
-        <p><strong>Synopsis:</strong> <%= latestAvyProblem.synopsis %></p>
-      <% } else { %>
+      <h1>Latest Forecasts!</h1>
+      <% if (home_data[0]) { %>
+        <% home_data.forEach(report_id => { %>
+            <img src="<%= report_id.image_path %>" alt="">
+            <h2>Details:</h2>
+            <p><strong>Danger Rating:</strong> <%= report_id.danger_rating %></p>
+            <p><strong>Avy Problem:</strong> <%= report_id.avalanche_type %></p>
+            <p><strong>Synopsis:</strong> <%= report_id.synopsis %></p>
+        <% }); %>
+    <% } else { %>
         <p>No data available.</p>
-      <% } %>
+    <% } %>
+    
 
     </div>
   </div>

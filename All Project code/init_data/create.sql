@@ -11,7 +11,7 @@ CREATE TABLE user_reports (
     report_id SERIAL PRIMARY KEY,
     observations VARCHAR(250) NOT NULL,
     date TIMESTAMPTZ NOT NULL,
-    image_path VARCHAR(200),
+    image_path VARCHAR(400),
     location VARCHAR(100)
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE reports_to_user (
 DROP TABLE IF EXISTS home_reports CASCADE;
 CREATE TABLE home_reports (
   report_id SERIAL PRIMARY KEY,
-  image_path VARCHAR(200),
+  image_path VARCHAR(350),
   danger_rating VARCHAR(50) NOT NULL,
   avalanche_type VARCHAR(50) NOT NULL,
   synopsis VARCHAR(250) NOT NULL,

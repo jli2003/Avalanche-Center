@@ -154,11 +154,36 @@
     <div id="reports">
       <h2>Current Reports</h2>
       <div class="report">
-        <strong>Report ID:</strong> 001<br>
-        <strong>Observations:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-        <strong>Date:</strong> 2023-12-01<br>
-        <strong>Image Path:</strong> /images/report001.jpg<br>
-        <strong>Location:</strong> City Park
+        <% if (report_data[0]) { %>
+          <% report_data.forEach(report_id => { %>
+            <% if (report_id.report_id) { %>
+              <strong>Report ID:</strong> <%= report_id.report_id %>
+              <Strong>User:</Strong> <%= report_id.username %> 
+              <Strong>:</Strong><br>
+              
+              <% if(report_id.image_path) { %>
+                <img height="80px" src="<%= report_id.image_path %>" alt="">            
+              <% } else { %>
+                <img height="80px" src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?cs=srgb&dl=pexels-pixabay-417173.jpg&fm=jpg">
+              <% } %>
+
+              <br>
+              <strong>Observations:</strong> <%= report_id.observations %><br>
+              <strong>Date:</strong> <%= report_id.date %><br>
+
+              <% if (report_id.location) { %>
+                <strong>Location:</strong> <%= report_id.location %><br>
+              <% } %>
+              
+              <br>
+              <br>
+            <% } %>
+          <% }); %>
+      <% } else { %>
+          <p>No data available.</p>
+      <% } %>
+
+        
       </div>
       <!-- Add more reports as needed -->
     </div>

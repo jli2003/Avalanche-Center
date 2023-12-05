@@ -1,3 +1,76 @@
+<style>
+  /* Your CSS styles go here */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+
+
+  .user-profile {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  #profile-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .user-profile-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .high-text {
+    color: red;
+  }
+
+  h1 {
+    color: #333;
+  }
+
+  h2 {
+    color: #ff6347;
+    margin-top: 10px;
+  }
+
+  .row img {
+    max-width: 80%;
+    display: block;
+    margin: 20px auto;
+  }
+
+  .info-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px; /* Add margin at the bottom */
+  }
+
+  .info-box p {
+    margin: 0;
+    color: #555;
+    font-size: 24px;
+    line-height: 1.6;
+  }
+</style>
+
 <header>
   <nav class="navbar navbar-expand-sm border-bottom">
     <div class="container">
@@ -26,7 +99,17 @@
         <div class="nav-item me-1">
           <a class="nav-link" href="/logout">Logout</a>
         </div>
+
+        
+
       </div>
+
+      <div class="user-profile">
+        <img id="profile-icon" height="35px" src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="Profile Icon" onclick="openUserProfile()">
+        <div id="user-profile-menu" class="user-profile-menu">
+        </div>
+      </div>
+
     </div>
   </nav>
 </header>
