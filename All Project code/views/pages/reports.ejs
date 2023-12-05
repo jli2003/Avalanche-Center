@@ -1,56 +1,57 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reports Page</title>
+  <title>Avalanche Reports Page</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      min-height: 100vh;
-      background-color: #f4f4f4; /* Light gray background */
+      padding: 0;
+      background-color: #f0f8ff; /* Light blue background */
     }
 
+    
+
     main {
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      width: 600px;
-      text-align: center;
-      margin: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
     }
 
     h1, h2 {
-      color: #333;
+      color: #4169e1; /* Royal blue text */
       margin-bottom: 20px;
     }
 
-    #addReportForm {
-      display: none;
-    }
-
     form {
-      display: flex;
-      flex-direction: column;
+      display: none;
+      width: 100%;
+      max-width: 600px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       margin-top: 20px;
     }
 
     label {
       margin-bottom: 8px;
-      color: #555;
+      color: #4682b4; /* Steel blue label color */
+      display: block;
     }
 
     input {
-      padding: 12px;
+      padding: 10px;
       margin-bottom: 16px;
-      border: 1px solid #ccc;
+      border: 1px solid #87cefa; /* Light sky blue border */
       border-radius: 5px;
       transition: border-color 0.3s;
       width: 100%;
@@ -58,43 +59,40 @@
     }
 
     input:focus {
-      border-color: #1a45a5;
+      border-color: #4169e1; /* Royal blue on focus */
     }
 
-    .blue-button {
-      background-color: #1a45a5;
-      color: #fff;
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .blue-button,
+    .cancel-button {
+      background-color: #4169e1; /* Royal blue button */
+      color: #ffffff;
       padding: 12px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
-      width: 100%;
+      width: 48%; /* Adjust width as needed */
       box-sizing: border-box;
     }
 
-    .blue-button:hover {
-      background-color: #0c2b66;
+    .cancel-button {
+      background-color: #ffffff; /* White background for cancel button */
+      color: #4169e1; /* Royal blue text for cancel button */
     }
 
-    #reports {
-      margin-top: 30px;
-    }
-
-    .report {
-      border: 1px solid #ddd;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      text-align: left;
+    .blue-button:hover,
+    .cancel-button:hover {
+      background-color: #1e90ff; /* Dodger blue on hover */
     }
 
     #addReportButton {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #1a45a5;
-      color: #fff;
+      background-color: darkblue; /* Royal blue button */
+      color: #ffffff;
       padding: 10px;
       border: none;
       border-radius: 5px;
@@ -103,43 +101,55 @@
     }
 
     #addReportButton:hover {
-      background-color: #0c2b66;
+      background-color: #1e90ff; /* Dodger blue on hover */
+    }
+
+    #reports {
+      width: 100%;
+      text-align: left;
+    }
+
+    .report {
+      border: 1px solid #b0e0e6; /* Powder blue border */
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      background-color: #f0f8ff; /* Light blue background */
     }
   </style>
 </head>
 
 <body>
+  <header>
+    <!-- No Style Applied Header -->
+  </header>
+
   <main>
-    <h1>Reports Page</h1>
+    <h1>Avalanche Reports Page</h1>
 
-    <button id="addReportButton" onclick="toggleAddReportForm()">Add Report</button>
+    <button id="addReportButton" onclick="toggleAddReportForm()" style="position: absolute; top: 70px; right: 10px;">Add Report</button>
 
-    <div id="addReportForm">
-      <h2>Add Report</h2>
-      <form method="post" action="/reports/add">
-        <div class="form-section">
-          <label for="report_id">Report ID:</label>
-          <input type="text" id="report_id" name="report_id" required>
-        </div>
-        <div class="form-section">
-          <label for="observations">Observations:</label>
-          <input type="text" id="observations" name="observations" required>
-        </div>
-        <div class="form-section">
-          <label for="date">Date:</label>
-          <input type="date" id="date" name="date" required>
-        </div>
-        <div class="form-section">
-          <label for="imagePath">Image Path:</label>
-          <input type="text" id="imagePath" name="imagePath" required>
-        </div>
-        <div class="form-section">
-          <label for="location">Location:</label>
-          <input type="text" id="location" name="location" required>
-        </div>
+    <form method="post" action="/reports/add">
+      <label for="report_id">Report ID:</label>
+      <input type="text" id="report_id" name="report_id" required>
+
+      <label for="observations">Observations:</label>
+      <input type="text" id="observations" name="observations" required>
+
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="imagePath">Image Path:</label>
+      <input type="text" id="imagePath" name="imagePath" required>
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" required>
+
+      <div class="button-container">
+        <button type="button" class="cancel-button" onclick="toggleAddReportForm()">Cancel</button>
         <input type="submit" value="Submit" class="blue-button" />
-      </form>
-    </div>
+      </div>
+    </form>
 
     <div id="reports">
       <h2>Current Reports</h2>
@@ -156,10 +166,11 @@
 
   <script>
     function toggleAddReportForm() {
-      var addReportForm = document.getElementById("addReportForm");
-      addReportForm.style.display = (addReportForm.style.display === "none" || addReportForm.style.display === "") ? "block" : "none";
+      var form = document.querySelector('form');
+      form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
     }
   </script>
+  <%- include ('../partials/footer') %>
 </body>
 
 </html>

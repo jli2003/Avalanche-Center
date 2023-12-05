@@ -78,6 +78,7 @@ describe('Register', () => {
 });
 
 
+
 //------------------------------------------LOGIN & LOGOUT TEST CASES---------------------------------------\\
 describe('Login', () => {
   it('positive : /login', done => {
@@ -101,7 +102,7 @@ describe('Login', () => {
         done();
       });
   });
-
+  
   it('negative : /login user unknown', done => {
     chai
       .request(server)
@@ -113,6 +114,7 @@ describe('Login', () => {
       });
   });
 
+
   it('positive : /logout successful', done => {
     chai
     .request(server)
@@ -122,8 +124,11 @@ describe('Login', () => {
       done();
     });
   });
+=======
+});
 
   //------------------------------------------DELETE USERS TEST CASES---------------------------------------\\
+
 
   it('positive: /delete_user', done => {
     chai
@@ -177,7 +182,5 @@ describe('Admin', () => {
   });
 
 }); */
-
-
 
 
