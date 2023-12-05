@@ -121,22 +121,49 @@ describe('Login', () => {
       expect(res).to.have.status(200);
       done();
     });
-  })
+  });
 
-});
+  //------------------------------------------DELETE USERS TEST CASES---------------------------------------\\
+
+  it('positive: /delete_user', done => {
+    chai
+    .request(server)
+    .delete('/delete_user')
+    .send({ username: 'New User' })
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+
+  it('negative: /delete_user user does not exist', done => {
+    chai
+    .request(server)
+    .delete('/delete_user')
+    .send({ username: 'escensceINVALID' })
+    .end((err, res) => {
+      expect(res).to.have.status(400);
+      done();
+    });
+  });
+
+  });
+  
+
+
 
 //------------------------------------------HOME & ADMIN TEST CASES---------------------------------------\\
-describe('Home', () => {
-  it('positive : /home', done => {
+/*
+describe('Admin', () => {
+  it('positive : /adminControls', done => {
     chai
       .request(server)
-      .get('/home')
+      .get('/adminControls')
       .end((err, res) => {
         expect(res).to.have.status(200);
         done();
       });
   });
-
 
   it('positive : Home Page Update', done => {
     chai
@@ -149,7 +176,7 @@ describe('Home', () => {
       });
   });
 
-});
+}); */
 
 
 

@@ -79,15 +79,14 @@ app.post('/add_user', async (req, res) => {
 });
 
 
-// #### original needs to be modified ####
-// original code for login and register pages
+
 
 // Define the route for the root path
 app.get('/', async (req, res) => {
-  // Redirect to the register route
-  try {
-    const hash = await bcrypt.hash("admin", 10);
 
+  try {
+    const hash = await bcrypt.hash("admin", 10); 
+    //inserting admin user with user type 1 for admin control
     const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\')';
     const values = ['admin', hash];
 
@@ -101,11 +100,14 @@ app.get('/', async (req, res) => {
 
 // Define the route to serve the registration page
 app.get('/register', (req, res) => {
-  // Render the registration page using EJS templating
   res.render('pages/register.ejs');
 });
 
-// Define the POST route for user registration
+/* Register endpoint
+  *Checks if user already exists
+  *If doesn't exist, hashes the password
+  *Inserts new user and password into the users table
+*/
 app.post('/register', async (req, res) => {
 
   const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
@@ -133,11 +135,14 @@ app.post('/register', async (req, res) => {
 
 // Define the route to serve the login page
 app.get('/login', (req, res) => {
-  // Render the login page using EJS templating
   res.render('pages/login.ejs');
 });
 
-// Define the POST route for user login
+/*LOGIN endpoint
+  *Checks if user exists in users table
+  *If exists, checks if password matches 
+  *
+*/
 app.post('/login', async (req, res) => {
   try {
     const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
@@ -164,6 +169,28 @@ app.post('/login', async (req, res) => {
     res.status(500).render('error', { message: 'Error' });
   }
 });
+
+app.delete('/delete_user', async (req, res) => {
+  const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
+
+  if (!exists) {
+    res.status(400).json({ message: "User does not exist" });
+    return;
+  }
+
+  const query = 'DELETE FROM users WHERE username = $1';
+
+  db.none(query, [req.body.username])
+    .then(() => {
+      res.status(200).json({ message: "User deleted successfully!" });
+    })
+    .catch((error) => {
+      console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+    });
+});
+
+
 
 
 // Route handler for '/logout' endpoint
