@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit User Details:</title>
+  <title>Edit User Details</title>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -14,8 +14,6 @@
       padding: 0;
       background-color: #f0f8ff; /* Light blue background */
     }
-
-    
 
     main {
       display: flex;
@@ -25,13 +23,12 @@
       padding: 20px;
     }
 
-    /* h1, h2 {
-      color: #4169e1; ]
+    h1, h2 {
+      color: #4169e1; /* Royal blue text */
       margin-bottom: 20px;
     }
 
-     form {
-      display: none;
+    form {
       width: 100%;
       max-width: 600px;
       background-color: #ffffff;
@@ -39,13 +36,13 @@
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       margin-top: 20px;
-    } 
+    }
 
-     label {
+    label {
       margin-bottom: 8px;
       color: #4682b4; /* Steel blue label color */
       display: block;
-    } 
+    }
 
     input {
       padding: 10px;
@@ -55,18 +52,18 @@
       transition: border-color 0.3s;
       width: 100%;
       box-sizing: border-box;
-    } 
+    }
 
-     input:focus {
+    input:focus {
       border-color: #4169e1; /* Royal blue on focus */
-    } */
+    }
 
-     .button-container {
+    .button-container {
       display: flex;
       justify-content: space-between;
-    } 
+    }
 
-     .blue-button,
+    .blue-button,
     .cancel-button {
       background-color: #4169e1; /* Royal blue button */
       color: #ffffff;
@@ -78,21 +75,34 @@
       width: 48%; /* Adjust width as needed */
       box-sizing: border-box;
     }
+
     .delete-button,
     .cancel-button {
-      background-color: #ffffff; /* White background for cancel button */
-      color: #4169e1; /* Royal blue text for cancel button */
+      background-color: grey; /* Royal blue button */
+      color: white;
+      padding: 12px;
+      border: black;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%; /* Adjust width as needed */
+      box-sizing: border-box;
+    }
+
+    .delete-button:hover,
+    .cancel-button:hover {
+      background-color: #1e90ff; /* Dodger blue on hover */
     }
 
     .delete-button:hover {
-        background-color: red;
+      background-color: red; /* Change the hover color for the delete button if needed */
     }
 
     .blue-button:hover,
     .cancel-button:hover {
       background-color: #1e90ff; /* Dodger blue on hover */
-    }  
-    
+    }
+
   </style>
 
 </head>
