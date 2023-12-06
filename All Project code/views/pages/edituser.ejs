@@ -78,10 +78,14 @@
       width: 48%; /* Adjust width as needed */
       box-sizing: border-box;
     }
-
+    .delete-button,
     .cancel-button {
       background-color: #ffffff; /* White background for cancel button */
       color: #4169e1; /* Royal blue text for cancel button */
+    }
+
+    .delete-button:hover {
+        background-color: red;
     }
 
     .blue-button:hover,
@@ -122,7 +126,7 @@
       <div class="button-container">
         <a class="nav-link" href="/home"><button type="button" class="cancel-button">HOME</button></a>
         <input type="submit" value="Submit" class="blue-button" />
-        <a class="nav-link" href="/delete_user"><button type="button" class="cancel-button">DELETE USER</button></a>
+        <a class="nav-link" href="/delete_user"><button type="button" class="delete-button">DELETE USER</button></a>
       </div>
     </form>
     <div class="col"><%- include ('../partials/message') %></div>
