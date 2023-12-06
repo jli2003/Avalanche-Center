@@ -102,26 +102,27 @@
     <h1>Edit details for user: <%= username %> </h1>
 
     <form method="post" action="/updateuser">
-      <!-- <label for="report_id">Report ID:</label>
-      <input type="text" id="report_id" name="report_id" required> -->
 
       <label for="username">New Username:</label>
       <input type="text" id="username" name="username">
-    
-      <% if (email.email) { %>
-      <p>Old Email: <%= email.email %></p>
-      <% } else { %>
-        <p>No Email for this account!</p>
+      <% if (email) { %>
+        <% if (email.email) { %>
+        <p>Old Email: <%= email.email %></p>
+        <% } else { %>
+            <p>No Email for this account!</p>
+        <% } %>
       <% } %>
       <label for="email">New Email:</label>
       <input type="text" id="email" name="email">
-
+      <br>
       <label for="new password">New Password:</label>
       <input type="text" id="password" name="password">
-
+      <br>
+      <br>
       <div class="button-container">
         <a class="nav-link" href="/home"><button type="button" class="cancel-button">HOME</button></a>
         <input type="submit" value="Submit" class="blue-button" />
+        <a class="nav-link" href="/delete_user"><button type="button" class="cancel-button">DELETE USER</button></a>
       </div>
     </form>
     <div class="col"><%- include ('../partials/message') %></div>

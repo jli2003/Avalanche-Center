@@ -178,7 +178,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.delete('/delete_user', async (req, res) => {
-  const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.body.username]);
+  const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.session.user]);
 
   if (!exists) {
     res.status(400).json({ message: "User does not exist" });
@@ -187,7 +187,7 @@ app.delete('/delete_user', async (req, res) => {
 
   const query = 'DELETE FROM users WHERE username = $1';
 
-  db.none(query, [req.body.username])
+  db.none(query, [req.session.user])
     .then(() => {
       res.status(200).json({ message: "User deleted successfully!" });
     })
@@ -238,7 +238,7 @@ app.get('/home', async (req, res) => {
 app.get('/reports', async (req, res) => {
   try {
     // Render the admin controls page
-    var query = 'SELECT * FROM users FULL JOIN reports_to_user'+
+    var query = 'SELECT * FROM users INNER JOIN reports_to_user'+
     ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id ORDER BY date DESC;' 
     const reports = await db.any(query);
     res.render('pages/reports', {report_data: reports});
@@ -292,12 +292,124 @@ app.post("/reports/add", async (req, res) => {
 
     if (addrep[0].report_id) {
       const serialkey = addrep[0].report_id;
-      query = 'INSERT INTO reports_to_user (username, report_id) VALUES ($1, $2);';
-      await db.any(query, [currusername, serialkey]);
+      query = 'INSERT INTO reports_to_user (username, report_id) VALUES ($1, $2) RETURNING *;';
+      console.log(await db.any(query, [currusername, serialkey]));
     } 
 
     // Redirect to reports page after the update
     res.redirect('/reports');
+
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+  }
+});
+
+//------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
+
+
+app.get('/edituser', async (req, res) => {
+  try {
+    console.log("at edit user");
+    // Render the change user page
+    const emailq = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
+    const theemail = await db.oneOrNone(emailq, [req.session.user]);
+    res.render('pages/edituser.ejs', {username: req.session.user, email: theemail });
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error loading reports page' });
+  }
+});
+
+
+app.post('/updateuser', async (req, res) => {
+  try {
+    // Extract form data for updating home page
+    const currusername = req.session.user;
+    const {username, email, password } = req.body;
+
+    var query = '';
+    const emailq = 'SELECT email FROM users WHERE username = $1;';
+    const theemail = await db.oneOrNone(emailq, [req.session.user]);
+    
+    if (username && username != '' ) {
+      if (username === req.session.user) {
+        
+        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username cannot be the same!" });
+      }
+      //check if the username already exists
+      const checkem = await db.any('SELECT * FROM users WHERE username = $1;', [username]);
+      if (checkem.length > 0) {
+        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username already exists pls choose another!" });
+      }
+      if (!(query == '')) {
+        query += ', username = $1';
+      } else {
+        query ='UPDATE users SET username = $1';
+      }
+    }
+
+    if (email && email != '') {
+      if (email == theemail.email) {
+        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Email cannot be the same!" });
+      }
+      if (!(query == '')) {
+        query += ', email = $2';
+      } else {
+        query ='UPDATE users SET email = $2';
+      }
+    }
+
+    if (password && password != '') {
+      if (!(query == '')) {
+        query += ', password = $3';
+      } else {
+        query = 'UPDATE users SET password = $3';
+      }
+    }
+
+    if (!query || query == '') {
+      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Please enter a field!" });
+    }
+    
+    query += ' where username = $4 RETURNING *;';
+    console.log(query);
+
+    var bycryppass = await bcrypt.hash(password, 10);
+
+    var added = await db.any(query, [username, email, bycryppass, currusername]);
+    console.log(added);
+
+    if (added[0]){
+      var mess = "Success!"
+      if (username && username != '') {
+        req.session.user = username;
+
+        // Optionally, you might want to save the session after modifying it
+        req.session.save(err => {
+            if (err) {
+                // Error handling for session save failure
+                console.error('Error saving session:', err);
+                return res.status(500).send('Error updating session');
+            }
+
+            // Continue with your logic after successfully updating the session
+            mess += "\nNew Username: " + req.session.user;
+        });
+      }
+
+       mess += "\n new email: " + email;
+      if (password) {
+        mess += "\nSet new password!"
+      }
+      const emailnew = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
+      const theemailnew = await db.oneOrNone(emailnew, [req.session.user]);
+      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemailnew, message: mess });
+    } else {
+      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "failed!" });
+    }
+
+    // Redirect to home page after the update
 
   } catch (error) {
     console.error('Error', error);
@@ -387,85 +499,6 @@ app.post('/admin/changeToAdmin', async (req, res) => {
 //------------------------------------^^^^^^^^^Requiring Admin login^^^^^^^^^^^------------------------------------
 
 
-
-//------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
-
-
-app.get('/edituser', async (req, res) => {
-  try {
-    // Render the change user page
-    const emailq = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
-    const theemail = await db.oneOrNone(emailq, [req.session.user]);
-    res.render('pages/edituser.ejs', {username: req.session.user, email: theemail });
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error loading reports page' });
-  }
-});
-
-
-app.post('/updateuser', async (req, res) => {
-  try {
-    // Extract form data for updating home page
-    const currusername = req.session.user;
-    const {username, email, password } = req.body;
-
-    var query = '';
-    const emailq = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
-    const theemail = await db.oneOrNone(emailq, [req.session.user]);
-    
-    if (username && username != '' ) {
-      if (username === req.session.user) {
-        
-        res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username cannot be the same!" });
-      }
-      if (!query === '') {
-        query += ', username = $1';
-      } else {
-        query ='UPDATE users SET username = $1';
-      }
-    }
-
-    if (email && email != '') {
-      if (email === theemail.email) {
-        res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Email cannot be the same!" });
-      }
-      if (!query === '') {
-        query += ', email = $12';
-      } else {
-        query ='UPDATE users SET email = $2';
-      }
-    }
-
-    if (password && password != '') {
-      if (!query === '') {
-        query += ', password = $3';
-      } else {
-        query ='UPDATE users SET password = $3';
-      }
-    }
-    
-    query += 'where username = $4 RETURNING *;';
-
-    var bycryppass = await bcrypt.hash(password, 10);
-
-    var added = await db.any(query, [username, email, bycryppass, req.session.user]);
-    console.log(added);
-
-    if (added[0]){
-      var mess = "Success! \n New username: "+ username + "\n new email: " + email;
-      res.render('pages/edituser.ejs', {username: username, email: theemail, message: mess });
-    } else {
-      res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "failed!" });
-    }
-
-    // Redirect to home page after the update
-
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
-  }
-});
 
 //------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
 
