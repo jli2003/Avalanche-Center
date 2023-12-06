@@ -305,9 +305,6 @@ app.post("/reports/add", async (req, res) => {
   }
 });
 
-//------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
-
-
 app.get('/edituser', async (req, res) => {
   try {
     console.log("at edit user");
