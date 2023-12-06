@@ -94,7 +94,8 @@ app.get('/', async (req, res) => {
 
     return res.redirect('/register');
   } catch (error){
-    console.error('Error', error);
+    // console.error('Error', error);
+    res.redirect('/register');
   }
 });
 
@@ -214,13 +215,13 @@ app.get('/logout', (req, res) => {
 app.get('/home', async (req, res) => {
   try {
     // Fetch the latest record from the database
-    const latestAvyProblem = await db.oneOrNone('SELECT * FROM home_reports ORDER BY report_id DESC LIMIT 1');
+    const latestAvyProblems = await db.any('SELECT * FROM home_reports ORDER BY report_id DESC');
 
     // Render the home page with the fetched data
-    res.render('pages/home.ejs', { latestAvyProblem });
+    res.render('pages/home.ejs', { home_data: latestAvyProblems });
   } catch (error) {
     console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
+    res.status(500).render('error', { message: error });
   }
 });
 
@@ -339,7 +340,10 @@ app.post('/admin/changeToAdmin', async (req, res) => {
 app.get('/reports', async (req, res) => {
   try {
     // Render the admin controls page
-    res.render('pages/reports');
+    var query = 'SELECT * FROM users FULL JOIN reports_to_user'+
+    ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id;' 
+    const reports = await db.any(query);
+    res.render('pages/reports', {report_data: reports});
   } catch (error) {
     console.error('Error', error);
     res.status(500).render('error', { message: 'Error loading reports page' });
