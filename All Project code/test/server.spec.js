@@ -124,21 +124,20 @@ describe('Login', () => {
       done();
     });
   });
-});
+
 
   //------------------------------------------DELETE USERS TEST CASES---------------------------------------\\
 
-
-  it('positive: /delete_user', done => {
-    chai
-    .request(server)
-    .delete('/delete_user')
-    .send({ username: 'New User' })
-    .end((err, res) => {
-      expect(res).to.have.status(200);
-      done();
-    });
-  });
+   it('positive: /delete_user', done => {
+     chai
+     .request(server)
+     .delete('/delete_user')
+     .send({ username: 'New User' })
+     .end((err, res) => {
+       expect(res).to.have.status(200);
+       done();
+     });
+   });
 
   it('negative: /delete_user user does not exist', done => {
     chai
@@ -150,6 +149,8 @@ describe('Login', () => {
       done();
     });
   });
+
+});
   
 
 

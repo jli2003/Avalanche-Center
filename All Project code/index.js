@@ -85,17 +85,22 @@ app.post('/add_user', async (req, res) => {
 app.get('/', async (req, res) => {
 
   try {
-    const hash = await bcrypt.hash("admin", 10); 
-    //inserting admin user with user type 1 for admin control
-    const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\') ON CONFLICT (username) DO NOTHING';
-    const values = ['admin', hash];
+    const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', ['admin']);
 
-    await db.none(query, values);
+    
+    if (!exists)
+    {
+      const hash = await bcrypt.hash("admin", 10); 
+      //inserting admin user with user type 1 for admin control
+      const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\')';
+      const values = ['admin', hash];
+  
+      await db.none(query, values);
+    }
 
-    return res.redirect('/register');
+    return res.redirect('/home');
   } catch (error){
     console.error('Error', error);
-    res.redirect('/register');
   }
 });
 
@@ -155,7 +160,8 @@ app.post('/login', async (req, res) => {
       if (match) {
         req.session.user = req.body.username;
         req.session.save();
-
+        req.session.user_type = Number(user.user_type);
+        req.session.save();
         res.redirect('/home');
       } else {
         res.status(400).render('pages/login', { message: "Incorrect username or password." });
@@ -215,20 +221,32 @@ app.get('/logout', (req, res) => {
 app.get('/home', async (req, res) => {
   try {
     // Fetch the latest record from the database
-    const latestAvyProblems = await db.any('SELECT * FROM home_reports ORDER BY date DESC LIMIT 1');
+    const latestAvyProblem = await db.oneOrNone('SELECT * FROM home_reports ORDER BY report_id DESC LIMIT 1');
+
 
     // Render the home page with the fetched data
-    res.render('pages/home.ejs', { home_data: latestAvyProblems });
+    res.render('pages/home.ejs', { latestAvyProblem });
   } catch (error) {
     console.error('Error', error);
-    res.status(500).render('error', { message: error });
+    res.status(500).render('error', { message: 'Error' });
   }
 });
 
 
 //------------------------------------Features not needing login-------------------------------------
 
-
+app.get('/reports', async (req, res) => {
+  try {
+    // Render the admin controls page
+    var query = 'SELECT * FROM users FULL JOIN reports_to_user'+
+    ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id ORDER BY date DESC;' 
+    const reports = await db.any(query);
+    res.render('pages/reports', {report_data: reports});
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error loading reports page' });
+  }
+});
 
 
 
@@ -253,107 +271,17 @@ const userAuth = (req, res, next) => {
 
 // Apply the authentication middleware to all subsequent routes
 //TODO: UNCOMMENT WHEN TESTING COMPLETE
-// app.use(userAuth);
+app.use(userAuth);
 
 
 
 //------------------------------------Requiring User login------------------------------------
 
-
-
-
-
-
-//------------------------------------^^^^^^^^^Requiring User login^^^^^^^^^^^------------------------------------
-
-
-const adminAuth = (req, res, next) => {
-  // Check if the user is logged in
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
-
-  // Check if the user is an admin (user_type = 1)
-  if (req.session.user.user_type !== 1) {
-    console.log('User is not an admin');
-    return res.redirect('/login');
-  }
-
-  next();
-};
-
-// Apply the authentication middleware to all subsequent routes
-//TODO: UNCOMMENT WHEN TESTING COMPLETE
-// app.use(adminAuth);
-
-//------------------------------------Requiring Admin login------------------------------------
-
-
-app.get('/adminControls', async (req, res) => {
-  try {
-    // Render the admin controls page
-    res.render('pages/adminControls');
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error loading admin controls page' });
-  }
-});
-
-app.post('/admin/updateHome', async (req, res) => {
-  try {
-    // Extract form data for updating home page
-    const { imagePath, dangerRating, avalancheType, synopsis } = req.body;
-
-    // Add your database query to update the home page
-    // Example query:
-    await db.none('UPDATE home_reports SET image_path = $1, danger_rating = $2, avalanche_type = $3, synopsis = $4', [imagePath, dangerRating, avalancheType, synopsis]);
-
-    // Redirect to the admin controls page after the update
-    res.redirect('/adminControls');
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
-  }
-});
-
-// Add this route handler to your existing code
-app.post('/admin/changeToAdmin', async (req, res) => {
-  try {
-    // Extract the username to change to admin from the form
-    const { username } = req.body;
-
-    // Update the user_type to make the user an admin (Assuming 1 represents admin)
-    await db.none('UPDATE users SET user_type = B\'1\' WHERE username = $1', [username]);
-
-    // Redirect to the admin controls page after the update
-    res.redirect('/adminControls');
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
-  }
-});
-
-//------------------------------------^^^^^^^^^Requiring Admin login^^^^^^^^^^^------------------------------------
-
-//------------------------------------^^^^^^^^^    reports     ^^^^^^^^^^^^^-----------------------------------
-
-app.get('/reports', async (req, res) => {
-  try {
-    // Render the admin controls page
-    var query = 'SELECT * FROM users FULL JOIN reports_to_user'+
-    ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id ORDER BY date DESC;' 
-    const reports = await db.any(query);
-    res.render('pages/reports', {report_data: reports});
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error loading reports page' });
-  }
-});
-
 app.post("/reports/add", async (req, res) => {
   try {
     // Extract form data for updating home page
     const currusername = req.session.user;
+    console.log(currusername);
     const { observations, date, image_path, location } = req.body;
 
     var variables = [observations, date, image_path, location];
@@ -377,7 +305,87 @@ app.post("/reports/add", async (req, res) => {
   }
 });
 
-//------------------------------------^^^^^^^^^    repots     ^^^^^^^^^^^^^-----------------------------------
+
+
+
+//------------------------------------^^^^^^^^^Requiring User login^^^^^^^^^^^------------------------------------
+
+
+
+const adminAuth = (req, res, next) => {
+  // Check if the user is logged in
+ /* console.log('User in adminAuth:', req.session.user);
+  console.log('User in TYPE:', req.session.user_type);*/
+
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  // Check if the user is an admin (user_type = 1)
+  if (req.session.user_type !== 1) {
+    //console.log('User is not an admin');
+    return res.redirect('/login');
+  }
+
+  next();
+};
+
+
+
+// Apply the authentication middleware to all subsequent routes
+//TODO: UNCOMMENT WHEN TESTING COMPLETE
+app.use(adminAuth);
+
+//------------------------------------Requiring Admin login------------------------------------
+
+
+app.get('/adminControls', async (req, res) => {
+  try {
+    // Render the admin controls page
+    res.render('pages/adminControls');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error loading admin controls page' });
+  }
+});
+
+app.post('/admin/updateHome', async (req, res) => {
+  try {
+    // Extract form data for inserting into the home page
+    const { imagePath, dangerRating, avalancheType, synopsis } = req.body;
+
+    // Add your database query to insert into the home_reports table
+    // Example query:
+    await db.none('INSERT INTO home_reports (image_path, danger_rating, avalanche_type, synopsis, date) VALUES ($1, $2, $3, $4, NOW())', [imagePath, dangerRating, avalancheType, synopsis]);
+
+    // Redirect to the admin controls page after the insertion
+    res.redirect('/adminControls');
+  } catch (error) {
+    console.error('Error inserting into home_reports:', error.message);
+    res.status(500).render('error', { message: 'Error updating home page' });
+  }
+});
+
+
+// Add this route handler to your existing code
+app.post('/admin/changeToAdmin', async (req, res) => {
+  try {
+    // Extract the username to change to admin from the form
+    const { username } = req.body;
+
+    // Update the user_type to make the user an admin (Assuming 1 represents admin)
+    await db.none('UPDATE users SET user_type = B\'1\' WHERE username = $1', [username]);
+
+    // Redirect to the admin controls page after the update
+    res.redirect('/adminControls');
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+  }
+});
+
+//------------------------------------^^^^^^^^^Requiring Admin login^^^^^^^^^^^------------------------------------
+
 
 
 //------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
