@@ -1,0 +1,138 @@
+<%- include ('../partials/head') %>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit User Details:</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f8ff; /* Light blue background */
+    }
+
+    
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    /* h1, h2 {
+      color: #4169e1; ]
+      margin-bottom: 20px;
+    }
+
+     form {
+      display: none;
+      width: 100%;
+      max-width: 600px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    } 
+
+     label {
+      margin-bottom: 8px;
+      color: #4682b4; /* Steel blue label color */
+      display: block;
+    } 
+
+    input {
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #87cefa; /* Light sky blue border */
+      border-radius: 5px;
+      transition: border-color 0.3s;
+      width: 100%;
+      box-sizing: border-box;
+    } 
+
+     input:focus {
+      border-color: #4169e1; /* Royal blue on focus */
+    } */
+
+     .button-container {
+      display: flex;
+      justify-content: space-between;
+    } 
+
+     .blue-button,
+    .cancel-button {
+      background-color: #4169e1; /* Royal blue button */
+      color: #ffffff;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 48%; /* Adjust width as needed */
+      box-sizing: border-box;
+    }
+    .delete-button,
+    .cancel-button {
+      background-color: #ffffff; /* White background for cancel button */
+      color: #4169e1; /* Royal blue text for cancel button */
+    }
+
+    .delete-button:hover {
+        background-color: red;
+    }
+
+    .blue-button:hover,
+    .cancel-button:hover {
+      background-color: #1e90ff; /* Dodger blue on hover */
+    }  
+    
+  </style>
+
+</head>
+
+<body>
+  <header>
+    <!-- No Style Applied Header -->
+  </header>
+
+  <main>
+    <h1>Edit details for user: <%= username %> </h1>
+
+    <form method="post" action="/updateuser">
+
+      <label for="username">New Username:</label>
+      <input type="text" id="username" name="username">
+      <% if (email) { %>
+        <% if (email.email) { %>
+        <p>Old Email: <%= email.email %></p>
+        <% } else { %>
+            <p>No Email for this account!</p>
+        <% } %>
+      <% } %>
+      <label for="email">New Email:</label>
+      <input type="text" id="email" name="email">
+      <br>
+      <label for="new password">New Password:</label>
+      <input type="text" id="password" name="password">
+      <br>
+      <br>
+      <div class="button-container">
+        <a class="nav-link" href="/home"><button type="button" class="cancel-button">HOME</button></a>
+        <input type="submit" value="Submit" class="blue-button" />
+        <a class="nav-link" href="/delete_user"><button type="button" class="delete-button">DELETE USER</button></a>
+      </div>
+    </form>
+    <div class="col"><%- include ('../partials/message') %></div>
+  </main>
+
+  <%- include ('../partials/footer') %>
+</body>
+
+</html>
