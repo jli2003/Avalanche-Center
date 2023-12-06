@@ -301,20 +301,21 @@ app.get('/adminControls', async (req, res) => {
 
 app.post('/admin/updateHome', async (req, res) => {
   try {
-    // Extract form data for updating home page
+    // Extract form data for inserting into the home page
     const { imagePath, dangerRating, avalancheType, synopsis } = req.body;
 
-    // Add your database query to update the home page
+    // Add your database query to insert into the home_reports table
     // Example query:
-    await db.none('UPDATE home_reports SET image_path = $1, danger_rating = $2, avalanche_type = $3, synopsis = $4', [imagePath, dangerRating, avalancheType, synopsis]);
+    await db.none('INSERT INTO home_reports (image_path, danger_rating, avalanche_type, synopsis, date) VALUES ($1, $2, $3, $4, NOW())', [imagePath, dangerRating, avalancheType, synopsis]);
 
-    // Redirect to the admin controls page after the update
+    // Redirect to the admin controls page after the insertion
     res.redirect('/adminControls');
   } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
+    console.error('Error inserting into home_reports:', error.message);
+    res.status(500).render('error', { message: 'Error updating home page' });
   }
 });
+
 
 // Add this route handler to your existing code
 app.post('/admin/changeToAdmin', async (req, res) => {

@@ -103,10 +103,6 @@
     </div>
   </div>
     <div class="info-box">
-
-      <!-- <p><strong>Avy Problem:</strong> wind slab / Persistent Slab </p>
-      <p><strong>Synopsis:</strong> N aspect highly reactive with persitent slabs that have been wind loaded, NE moderate, the safest slopes are the thin S-W's.</p> -->
-
       <% if (latestAvyProblem) { %>
         <p><strong>Danger Rating:</strong> <%= latestAvyProblem.danger_rating %></p>
         <p><strong>Avy Problem:</strong> <%= latestAvyProblem.avalanche_type %></p>
@@ -114,7 +110,6 @@
       <% } else { %>
         <p>No data available.</p>
       <% } %>
-
     </div>
   </div>
 </main>
