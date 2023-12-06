@@ -92,10 +92,11 @@ app.get('/', async (req, res) => {
 
     await db.none(query, values);
 
-    return res.redirect('/register');
+    return res.redirect('/home');
   } catch (error){
-    console.error('Error', error);
-    res.redirect('/register');
+    // console.error('Error', error);
+    res.redirect('/home');
+
   }
 });
 
@@ -215,13 +216,14 @@ app.get('/logout', (req, res) => {
 app.get('/home', async (req, res) => {
   try {
     // Fetch the latest record from the database
-    const latestAvyProblems = await db.any('SELECT * FROM home_reports ORDER BY date DESC LIMIT 1');
+    const latestAvyProblem = await db.oneOrNone('SELECT * FROM home_reports ORDER BY report_id DESC LIMIT 1');
+
 
     // Render the home page with the fetched data
-    res.render('pages/home.ejs', { home_data: latestAvyProblems });
+    res.render('pages/home.ejs', { latestAvyProblem });
   } catch (error) {
     console.error('Error', error);
-    res.status(500).render('error', { message: error });
+    res.status(500).render('error', { message: 'Error' });
   }
 });
 
@@ -301,20 +303,21 @@ app.get('/adminControls', async (req, res) => {
 
 app.post('/admin/updateHome', async (req, res) => {
   try {
-    // Extract form data for updating home page
+    // Extract form data for inserting into the home page
     const { imagePath, dangerRating, avalancheType, synopsis } = req.body;
 
-    // Add your database query to update the home page
+    // Add your database query to insert into the home_reports table
     // Example query:
-    await db.none('UPDATE home_reports SET image_path = $1, danger_rating = $2, avalanche_type = $3, synopsis = $4', [imagePath, dangerRating, avalancheType, synopsis]);
+    await db.none('INSERT INTO home_reports (image_path, danger_rating, avalanche_type, synopsis, date) VALUES ($1, $2, $3, $4, NOW())', [imagePath, dangerRating, avalancheType, synopsis]);
 
-    // Redirect to the admin controls page after the update
+    // Redirect to the admin controls page after the insertion
     res.redirect('/adminControls');
   } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
+    console.error('Error inserting into home_reports:', error.message);
+    res.status(500).render('error', { message: 'Error updating home page' });
   }
 });
+
 
 // Add this route handler to your existing code
 app.post('/admin/changeToAdmin', async (req, res) => {
