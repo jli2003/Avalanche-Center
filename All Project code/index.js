@@ -92,10 +92,10 @@ app.get('/', async (req, res) => {
 
     await db.none(query, values);
 
-    return res.redirect('/register');
+    return res.redirect('/home');
   } catch (error){
     // console.error('Error', error);
-    res.redirect('/register');
+    res.redirect('/home');
   }
 });
 
@@ -215,13 +215,13 @@ app.get('/logout', (req, res) => {
 app.get('/home', async (req, res) => {
   try {
     // Fetch the latest record from the database
-    const latestAvyProblems = await db.any('SELECT * FROM home_reports ORDER BY report_id DESC');
+    const latestAvyProblem = await db.oneOrNone('SELECT * FROM home_reports ORDER BY report_id DESC LIMIT 1');
 
     // Render the home page with the fetched data
-    res.render('pages/home.ejs', { home_data: latestAvyProblems });
+    res.render('pages/home.ejs', { latestAvyProblem });
   } catch (error) {
     console.error('Error', error);
-    res.status(500).render('error', { message: error });
+    res.status(500).render('error', { message: 'Error' });
   }
 });
 

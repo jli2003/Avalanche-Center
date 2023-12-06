@@ -94,28 +94,26 @@
     <h1>Avalanche Conditions & Forecasts</h1>
 
     <div class="col"><%- include ('../partials/message') %></div>
-    <div class="row">
-        <!-- <img src="/All%20Project%20code/src/resources/img/buffAvyDrawing.JPG" alt="avalanche map"> -->
-        <img src="https://bloximages.newyork1.vip.townnews.com/denvergazette.com/content/tncms/assets/v3/editorial/f/16/f16e7743-1ac0-5fe0-b36b-c80ded1bde0f/645d9d249e988.image.png?resize=795%2C490" alt="avalanche map">
+      <div class="row">
+        <% if (latestAvyProblem && latestAvyProblem.image_path) { %>
+            <img src="<%= latestAvyProblem.image_path %>" alt="avalanche map">
+        <% } else { %>
+            <p>No image available.</p>
+        <% } %>
     </div>
   </div>
     <div class="info-box">
-      
+
       <!-- <p><strong>Avy Problem:</strong> wind slab / Persistent Slab </p>
       <p><strong>Synopsis:</strong> N aspect highly reactive with persitent slabs that have been wind loaded, NE moderate, the safest slopes are the thin S-W's.</p> -->
-      <h1>Latest Forecasts!</h1>
-      <% if (home_data[0]) { %>
-        <% home_data.forEach(report_id => { %>
-            <img src="<%= report_id.image_path %>" alt="">
-            <h2>Details:</h2>
-            <p><strong>Danger Rating:</strong> <%= report_id.danger_rating %></p>
-            <p><strong>Avy Problem:</strong> <%= report_id.avalanche_type %></p>
-            <p><strong>Synopsis:</strong> <%= report_id.synopsis %></p>
-        <% }); %>
-    <% } else { %>
+
+      <% if (latestAvyProblem) { %>
+        <p><strong>Danger Rating:</strong> <%= latestAvyProblem.danger_rating %></p>
+        <p><strong>Avy Problem:</strong> <%= latestAvyProblem.avalanche_type %></p>
+        <p><strong>Synopsis:</strong> <%= latestAvyProblem.synopsis %></p>
+      <% } else { %>
         <p>No data available.</p>
-    <% } %>
-    
+      <% } %>
 
     </div>
   </div>

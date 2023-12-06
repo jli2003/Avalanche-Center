@@ -12,9 +12,11 @@ INSERT INTO reports_to_user (username, report_id) VALUES
 ('user3', 3);
 */
 
+-- <img src="https://drive.google.com/uc?id=YOUR_IMAGE_ID" alt="Description">
+-- https://drive.google.com/file/d/1fTyZ1myGjDEj5Z3klSKoHrU0mUGotTZU/view?usp=sharing
+
 INSERT INTO home_reports (image_path, danger_rating, avalanche_type, synopsis, date) VALUES 
-('https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp', 5, 'Snowy, it is bad', 'very bad', CURRENT_TIMESTAMP),
-(NULL, 4, 'another', 'bad too', CURRENT_TIMESTAMP);
+('https://drive.google.com/uc?id=1fTyZ1myGjDEj5Z3klSKoHrU0mUGotTZU', 'High', 'Wind Slab / Persistent Slab', 'N aspect highly reactive with persitent slabs that have been wind loaded, NE moderate, the safest slopes are the thin S-W.', CURRENT_TIMESTAMP);
 
 INSERT INTO users (username, email, password, user_type) VALUES 
 ('shrek1', 'shrek@gmail.com', 'shrek', B'0'),
