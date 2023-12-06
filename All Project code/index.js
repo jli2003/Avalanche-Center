@@ -85,18 +85,22 @@ app.post('/add_user', async (req, res) => {
 app.get('/', async (req, res) => {
 
   try {
-    const hash = await bcrypt.hash("admin", 10); 
-    //inserting admin user with user type 1 for admin control
-    const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\')';
-    const values = ['admin', hash];
+    const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', ['admin']);
 
-    await db.none(query, values);
+    
+    if (!exists)
+    {
+      const hash = await bcrypt.hash("admin", 10); 
+      //inserting admin user with user type 1 for admin control
+      const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\')';
+      const values = ['admin', hash];
+  
+      await db.none(query, values);
+    }
 
     return res.redirect('/home');
   } catch (error){
-    // console.error('Error', error);
-    res.redirect('/home');
-
+    console.error('Error', error);
   }
 });
 
@@ -310,8 +314,8 @@ app.post("/reports/add", async (req, res) => {
 
 const adminAuth = (req, res, next) => {
   // Check if the user is logged in
-  console.log('User in adminAuth:', req.session.user);
-  console.log('User in TYPE:', req.session.user_type);
+ /* console.log('User in adminAuth:', req.session.user);
+  console.log('User in TYPE:', req.session.user_type);*/
 
   if (!req.session.user) {
     return res.redirect('/login');
@@ -319,7 +323,7 @@ const adminAuth = (req, res, next) => {
 
   // Check if the user is an admin (user_type = 1)
   if (req.session.user_type !== 1) {
-    console.log('User is not an admin');
+    //console.log('User is not an admin');
     return res.redirect('/login');
   }
 
