@@ -381,32 +381,84 @@ app.post("/reports/add", async (req, res) => {
 
 
 //------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
-app.post("/updateuser", async (req, res) => {
+
+
+app.get('/edituser', async (req, res) => {
+  try {
+    // Render the change user page
+    const emailq = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
+    const theemail = await db.oneOrNone(emailq, [req.session.user]);
+    res.render('pages/edituser.ejs', {username: req.session.user, email: theemail });
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error loading reports page' });
+  }
+});
+
+
+app.post('/updateuser', async (req, res) => {
   try {
     // Extract form data for updating home page
     const currusername = req.session.user;
-    const { observations, date, image_path, location } = req.body;
+    const {username, email, password } = req.body;
 
-    var variables = [observations, date, image_path, location];
-    var query = 'INSERT INTO user_reports (observations, date, image_path, location) VALUES ($1, $2, $3, $4) RETURNING *;';
+    var query = '';
+    const emailq = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
+    const theemail = await db.oneOrNone(emailq, [req.session.user]);
     
-    const addrep = await db.any(query, variables);
-    console.log(addrep);
+    if (username && username != '' ) {
+      if (username === req.session.user) {
+        
+        res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username cannot be the same!" });
+      }
+      if (!query === '') {
+        query += ', username = $1';
+      } else {
+        query ='UPDATE users SET username = $1';
+      }
+    }
 
-    if (addrep[0].report_id) {
-      const serialkey = addrep[0].report_id;
-      query = 'INSERT INTO reports_to_user (username, report_id) VALUES ($1, $2);';
-      await db.any(query, [currusername, serialkey]);
-    } 
+    if (email && email != '') {
+      if (email === theemail.email) {
+        res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Email cannot be the same!" });
+      }
+      if (!query === '') {
+        query += ', email = $12';
+      } else {
+        query ='UPDATE users SET email = $2';
+      }
+    }
 
-    // Redirect to reports page after the update
-    res.redirect('/home');
+    if (password && password != '') {
+      if (!query === '') {
+        query += ', password = $3';
+      } else {
+        query ='UPDATE users SET password = $3';
+      }
+    }
+    
+    query += 'where username = $4 RETURNING *;';
+
+    var bycryppass = await bcrypt.hash(password, 10);
+
+    var added = await db.any(query, [username, email, bycryppass, req.session.user]);
+    console.log(added);
+
+    if (added[0]){
+      var mess = "Success! \n New username: "+ username + "\n new email: " + email;
+      res.render('pages/edituser.ejs', {username: username, email: theemail, message: mess });
+    } else {
+      res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "failed!" });
+    }
+
+    // Redirect to home page after the update
 
   } catch (error) {
     console.error('Error', error);
     res.status(500).render('error', { message: 'Error' });
   }
 });
+
 //------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
 
 // *****************************************************
