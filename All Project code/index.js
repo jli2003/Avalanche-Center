@@ -87,7 +87,7 @@ app.get('/', async (req, res) => {
   try {
     const hash = await bcrypt.hash("admin", 10); 
     //inserting admin user with user type 1 for admin control
-    const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\') ON CONFLICT (username) DO NOTHING';
+    const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\')';
     const values = ['admin', hash];
 
     await db.none(query, values);
@@ -255,7 +255,7 @@ const userAuth = (req, res, next) => {
 
 // Apply the authentication middleware to all subsequent routes
 //TODO: UNCOMMENT WHEN TESTING COMPLETE
-// app.use(userAuth);
+app.use(userAuth);
 
 
 
@@ -286,7 +286,7 @@ const adminAuth = (req, res, next) => {
 
 // Apply the authentication middleware to all subsequent routes
 //TODO: UNCOMMENT WHEN TESTING COMPLETE
-// app.use(adminAuth);
+app.use(adminAuth);
 
 //------------------------------------Requiring Admin login------------------------------------
 
@@ -357,6 +357,7 @@ app.post("/reports/add", async (req, res) => {
   try {
     // Extract form data for updating home page
     const currusername = req.session.user;
+    console.log(currusername);
     const { observations, date, image_path, location } = req.body;
 
     var variables = [observations, date, image_path, location];
