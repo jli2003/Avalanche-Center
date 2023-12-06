@@ -130,8 +130,8 @@
     <button id="addReportButton" onclick="toggleAddReportForm()" style="position: absolute; top: 70px; right: 10px;">Add Report</button>
 
     <form method="post" action="/reports/add">
-      <label for="report_id">Report ID:</label>
-      <input type="text" id="report_id" name="report_id" required>
+      <!-- <label for="report_id">Report ID:</label>
+      <input type="text" id="report_id" name="report_id" required> -->
 
       <label for="observations">Observations:</label>
       <input type="text" id="observations" name="observations" required>
@@ -139,11 +139,11 @@
       <label for="date">Date:</label>
       <input type="date" id="date" name="date" required>
 
-      <label for="imagePath">Image Path:</label>
-      <input type="text" id="imagePath" name="imagePath" required>
+      <label for="imagePath">Image URL(optional):</label>
+      <input type="text" id="image_path" name="image_path">
 
-      <label for="location">Location:</label>
-      <input type="text" id="location" name="location" required>
+      <label for="location">Location(optional):</label>
+      <input type="text" id="location" name="location">
 
       <div class="button-container">
         <button type="button" class="cancel-button" onclick="toggleAddReportForm()">Cancel</button>
@@ -174,7 +174,6 @@
               <% if (report_id.location) { %>
                 <strong>Location:</strong> <%= report_id.location %><br>
               <% } %>
-              
               <br>
               <br>
             <% } %>

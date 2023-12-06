@@ -87,14 +87,14 @@ app.get('/', async (req, res) => {
   try {
     const hash = await bcrypt.hash("admin", 10); 
     //inserting admin user with user type 1 for admin control
-    const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\')';
+    const query = 'INSERT INTO users (username, password, user_type) VALUES ($1, $2, B\'1\') ON CONFLICT (username) DO NOTHING';
     const values = ['admin', hash];
 
     await db.none(query, values);
 
     return res.redirect('/register');
   } catch (error){
-    // console.error('Error', error);
+    console.error('Error', error);
     res.redirect('/register');
   }
 });
@@ -153,7 +153,7 @@ app.post('/login', async (req, res) => {
       const match = await bcrypt.compare(req.body.password, user.password);
 
       if (match) {
-        req.session.user = user;
+        req.session.user = req.body.username;
         req.session.save();
 
         res.redirect('/home');
@@ -215,7 +215,7 @@ app.get('/logout', (req, res) => {
 app.get('/home', async (req, res) => {
   try {
     // Fetch the latest record from the database
-    const latestAvyProblems = await db.any('SELECT * FROM home_reports ORDER BY report_id DESC');
+    const latestAvyProblems = await db.any('SELECT * FROM home_reports ORDER BY date DESC LIMIT 1');
 
     // Render the home page with the fetched data
     res.render('pages/home.ejs', { home_data: latestAvyProblems });
@@ -341,7 +341,7 @@ app.get('/reports', async (req, res) => {
   try {
     // Render the admin controls page
     var query = 'SELECT * FROM users FULL JOIN reports_to_user'+
-    ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id;' 
+    ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id ORDER BY date DESC;' 
     const reports = await db.any(query);
     res.render('pages/reports', {report_data: reports});
   } catch (error) {
@@ -353,14 +353,24 @@ app.get('/reports', async (req, res) => {
 app.post("/reports/add", async (req, res) => {
   try {
     // Extract form data for updating home page
-    const { report_id, observations,  date, image_path, location } = req.body;
+    const currusername = req.session.user;
+    const { observations, date, image_path, location } = req.body;
 
-    // Add your database query to update the home page
-    // Example query:
-    await db.none('UPDATE user_reports SET report_id = $1, observations = $2, date = $3, image_path = $4, location = $5', [report_id, observations,  date, image_path, location]);
+    var variables = [observations, date, image_path, location];
+    var query = 'INSERT INTO user_reports (observations, date, image_path, location) VALUES ($1, $2, $3, $4) RETURNING *;';
+    
+    const addrep = await db.any(query, variables);
+    console.log(addrep);
 
-    // Redirect to home page after the update
-    res.redirect('/home');
+    if (addrep[0].report_id) {
+      const serialkey = addrep[0].report_id;
+      query = 'INSERT INTO reports_to_user (username, report_id) VALUES ($1, $2);';
+      await db.any(query, [currusername, serialkey]);
+    } 
+
+    // Redirect to reports page after the update
+    res.redirect('/reports');
+
   } catch (error) {
     console.error('Error', error);
     res.status(500).render('error', { message: 'Error' });
@@ -368,6 +378,36 @@ app.post("/reports/add", async (req, res) => {
 });
 
 //------------------------------------^^^^^^^^^    repots     ^^^^^^^^^^^^^-----------------------------------
+
+
+//------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
+app.post("/updateuser", async (req, res) => {
+  try {
+    // Extract form data for updating home page
+    const currusername = req.session.user;
+    const { observations, date, image_path, location } = req.body;
+
+    var variables = [observations, date, image_path, location];
+    var query = 'INSERT INTO user_reports (observations, date, image_path, location) VALUES ($1, $2, $3, $4) RETURNING *;';
+    
+    const addrep = await db.any(query, variables);
+    console.log(addrep);
+
+    if (addrep[0].report_id) {
+      const serialkey = addrep[0].report_id;
+      query = 'INSERT INTO reports_to_user (username, report_id) VALUES ($1, $2);';
+      await db.any(query, [currusername, serialkey]);
+    } 
+
+    // Redirect to reports page after the update
+    res.redirect('/home');
+
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+  }
+});
+//------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
