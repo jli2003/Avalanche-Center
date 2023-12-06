@@ -156,7 +156,8 @@ app.post('/login', async (req, res) => {
       if (match) {
         req.session.user = req.body.username;
         req.session.save();
-
+        req.session.user_type = Number(user.user_type);
+        req.session.save();
         res.redirect('/home');
       } else {
         res.status(400).render('pages/login', { message: "Incorrect username or password." });
@@ -230,7 +231,18 @@ app.get('/home', async (req, res) => {
 
 //------------------------------------Features not needing login-------------------------------------
 
-
+app.get('/reports', async (req, res) => {
+  try {
+    // Render the admin controls page
+    var query = 'SELECT * FROM users FULL JOIN reports_to_user'+
+    ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id ORDER BY date DESC;' 
+    const reports = await db.any(query);
+    res.render('pages/reports', {report_data: reports});
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error loading reports page' });
+  }
+});
 
 
 
@@ -261,7 +273,33 @@ app.use(userAuth);
 
 //------------------------------------Requiring User login------------------------------------
 
+app.post("/reports/add", async (req, res) => {
+  try {
+    // Extract form data for updating home page
+    const currusername = req.session.user;
+    console.log(currusername);
+    const { observations, date, image_path, location } = req.body;
 
+    var variables = [observations, date, image_path, location];
+    var query = 'INSERT INTO user_reports (observations, date, image_path, location) VALUES ($1, $2, $3, $4) RETURNING *;';
+    
+    const addrep = await db.any(query, variables);
+    console.log(addrep);
+
+    if (addrep[0].report_id) {
+      const serialkey = addrep[0].report_id;
+      query = 'INSERT INTO reports_to_user (username, report_id) VALUES ($1, $2);';
+      await db.any(query, [currusername, serialkey]);
+    } 
+
+    // Redirect to reports page after the update
+    res.redirect('/reports');
+
+  } catch (error) {
+    console.error('Error', error);
+    res.status(500).render('error', { message: 'Error' });
+  }
+});
 
 
 
@@ -269,20 +307,26 @@ app.use(userAuth);
 //------------------------------------^^^^^^^^^Requiring User login^^^^^^^^^^^------------------------------------
 
 
+
 const adminAuth = (req, res, next) => {
   // Check if the user is logged in
+  console.log('User in adminAuth:', req.session.user);
+  console.log('User in TYPE:', req.session.user_type);
+
   if (!req.session.user) {
     return res.redirect('/login');
   }
 
   // Check if the user is an admin (user_type = 1)
-  if (req.session.user.user_type !== 1) {
+  if (req.session.user_type !== 1) {
     console.log('User is not an admin');
     return res.redirect('/login');
   }
 
   next();
 };
+
+
 
 // Apply the authentication middleware to all subsequent routes
 //TODO: UNCOMMENT WHEN TESTING COMPLETE
@@ -338,50 +382,6 @@ app.post('/admin/changeToAdmin', async (req, res) => {
 
 //------------------------------------^^^^^^^^^Requiring Admin login^^^^^^^^^^^------------------------------------
 
-//------------------------------------^^^^^^^^^    reports     ^^^^^^^^^^^^^-----------------------------------
-
-app.get('/reports', async (req, res) => {
-  try {
-    // Render the admin controls page
-    var query = 'SELECT * FROM users FULL JOIN reports_to_user'+
-    ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id ORDER BY date DESC;' 
-    const reports = await db.any(query);
-    res.render('pages/reports', {report_data: reports});
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error loading reports page' });
-  }
-});
-
-app.post("/reports/add", async (req, res) => {
-  try {
-    // Extract form data for updating home page
-    const currusername = req.session.user;
-    console.log(currusername);
-    const { observations, date, image_path, location } = req.body;
-
-    var variables = [observations, date, image_path, location];
-    var query = 'INSERT INTO user_reports (observations, date, image_path, location) VALUES ($1, $2, $3, $4) RETURNING *;';
-    
-    const addrep = await db.any(query, variables);
-    console.log(addrep);
-
-    if (addrep[0].report_id) {
-      const serialkey = addrep[0].report_id;
-      query = 'INSERT INTO reports_to_user (username, report_id) VALUES ($1, $2);';
-      await db.any(query, [currusername, serialkey]);
-    } 
-
-    // Redirect to reports page after the update
-    res.redirect('/reports');
-
-  } catch (error) {
-    console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
-  }
-});
-
-//------------------------------------^^^^^^^^^    repots     ^^^^^^^^^^^^^-----------------------------------
 
 
 //------------------------------------^^^^^^^^^    profile customization     ^^^^^^^^^^^^^-----------------------------------
