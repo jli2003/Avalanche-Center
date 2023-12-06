@@ -1,49 +1,137 @@
-<!-- views/pages/adminControls.ejs -->
-
 <%- include('../partials/head') %>
 <%- include('../partials/menu') %>
 
-<h1>Admin Controls</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- Section for updating home page -->
-<h2>Update Home Page</h2>
-<form method="post" action="/admin/updateHome">
-  <!-- Add form fields for updating home page -->
-  <div class="form-section">
-    <label for="imagePath">Image Path:</label>
-    <input type="text" id="imagePath" name="imagePath" required>
-  </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Controls</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f8ff; /* Light blue background */
+    }
 
-  <div class="form-section">
-    <label for="dangerRating">Danger Rating:</label>
-    <input type="text" id="dangerRating" name="dangerRating" required>
-  </div>
 
-  <div class="form-section">
-    <label for="avalancheType">Avalanche Type:</label>
-    <input type="text" id="avalancheType" name="avalancheType" required>
-  </div>
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
 
-  <div class="form-section">
-    <label for="synopsis">Synopsis:</label>
-    <textarea id="synopsis" name="synopsis" required></textarea>
-  </div>
+    h1, h2 {
+      color: #4169e1; /* Royal blue text */
+      margin-bottom: 20px;
+    }
 
-  <button type="submit">Update Home Page</button>
-</form>
+    form {
+      width: 100%;
+      max-width: 600px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
 
-<!-- Add spacing between sections -->
-<div class="section-spacing"></div>
+    label {
+      margin-bottom: 8px;
+      color: #4682b4; /* Steel blue label color */
+      display: block;
+    }
 
-<!-- Section for changing user to admin -->
-<h2>Change User to Admin</h2>
-<form method="post" action="/admin/changeToAdmin">
-  <div class="form-section">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-  </div>
+    input, textarea {
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #87cefa; /* Light sky blue border */
+      border-radius: 5px;
+      transition: border-color 0.3s;
+      width: 100%;
+      box-sizing: border-box;
+    }
 
-  <button type="submit">Change to Admin</button>
-</form>
+    input:focus, textarea:focus {
+      border-color: #4169e1; /* Royal blue on focus */
+    }
 
-<%- include('../partials/footer') %>
+    button {
+      background-color: #4169e1; /* Royal blue button */
+      color: #ffffff;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%; /* Adjust width as needed */
+      box-sizing: border-box;
+    }
+
+    button:hover {
+      background-color: #1e90ff; /* Dodger blue on hover */
+    }
+
+    .section-spacing {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <main>
+    <h1>
+      Admin Controls
+    </h1>
+    <!-- Section for updating home page -->
+    <h2>Update Home Page</h2>
+    <form method="post" action="/admin/updateHome">
+      <!-- Add form fields for updating home page -->
+      <div class="form-section">
+        <label for="imagePath">Image Path:</label>
+        <input type="text" id="imagePath" name="imagePath" required>
+      </div>
+
+      <div class="form-section">
+        <label for="dangerRating">Danger Rating:</label>
+        <input type="text" id="dangerRating" name="dangerRating" required>
+      </div>
+
+      <div class="form-section">
+        <label for="avalancheType">Avalanche Type:</label>
+        <input type="text" id="avalancheType" name="avalancheType" required>
+      </div>
+
+      <div class="form-section">
+        <label for="synopsis">Synopsis:</label>
+        <textarea id="synopsis" name="synopsis" required></textarea>
+      </div>
+
+      <button type="submit">Update Home Page</button>
+    </form>
+
+    <!-- Add spacing between sections -->
+    <div class="section-spacing"></div>
+
+    <!-- Section for changing user to admin -->
+    <h2>Change User to Admin</h2>
+    <form method="post" action="/admin/changeToAdmin">
+      <div class="form-section">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+
+      <button type="submit">Change to Admin</button>
+    </form>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+
+</html>
