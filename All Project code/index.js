@@ -474,7 +474,7 @@ app.use(adminAuth);
 app.get('/adminControls', async (req, res) => {
   try {
     // Render the admin controls page
-    res.render('pages/adminControls');
+    res.render('pages/AdminControls');
   } catch (error) {
     console.error('Error', error);
     res.status(500).render('error', { message: 'Error loading admin controls page' });
