@@ -178,7 +178,14 @@ app.post('/login', async (req, res) => {
 });
 
 app.delete('/delete_user', async (req, res) => {
-  const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [req.session.user]);
+  const usernameToDelete = req.query.username; 
+
+  if (!usernameToDelete) {
+    res.status(400).json({ message: "Username parameter is missing" });
+    return;
+  }
+
+  const exists = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [usernameToDelete]);
 
   if (!exists) {
     res.status(400).json({ message: "User does not exist" });
@@ -187,15 +194,16 @@ app.delete('/delete_user', async (req, res) => {
 
   const query = 'DELETE FROM users WHERE username = $1';
 
-  db.none(query, [req.session.user])
+  db.none(query, [usernameToDelete])
     .then(() => {
       res.status(200).json({ message: "User deleted successfully!" });
     })
     .catch((error) => {
       console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
+      res.status(500).render('error', { message: 'Error' });
     });
 });
+
 
 
 

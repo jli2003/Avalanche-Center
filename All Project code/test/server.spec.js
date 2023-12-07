@@ -57,7 +57,7 @@ describe('Register', () => {
     chai
       .request(server)
       .post('/register')
-      .send({username: 'New User', password: '123'})
+      .send({username: 'NewUser', password: '123'})
       .end((err, res) => {
         expect(res).to.have.status(200);
         done();
@@ -68,7 +68,7 @@ describe('Register', () => {
     chai
       .request(server)
       .post('/register')
-      .send({username: 'New User', password: 'invalid'})
+      .send({username: 'NewUser', password: 'invalid'})
       .end((err, res) => {
         expect(res).to.have.status(400);
         done();
@@ -85,7 +85,7 @@ describe('Login', () => {
     chai
       .request(server)
       .post('/login')
-      .send({username: 'New User', password: '123'})
+      .send({username: 'NewUser', password: '123'})
       .end((err, res) => {
         expect(res).to.have.status(200);
         done();
@@ -96,7 +96,7 @@ describe('Login', () => {
     chai
       .request(server)
       .post('/login')
-      .send({username: 'New User', password: 'bob'})
+      .send({username: 'NewUser', password: 'bob'})
       .end((err, res) => {
         expect(res).to.have.status(400);
         done();
@@ -127,32 +127,39 @@ describe('Login', () => {
 
 
   //------------------------------------------DELETE USERS TEST CASES---------------------------------------\\
+});
 
-   /*it('positive: /delete_user', done => {
-     chai
-     .request(server)
-     .delete('/delete_user')
-     .send({ username: 'New User' })
-     .end((err, res) => {
-       expect(res).to.have.status(200);
-       done();
-     });
-   });*/
-
-  it('negative: /delete_user user does not exist', done => {
+describe('Delete', () => {
+  it('positive: /delete_user', (done) => {
     chai
-    .request(server)
-    .delete('/delete_user')
-    .send({ username: 'escensceINVALID' })
-    .end((err, res) => {
-      expect(res).to.have.status(400);
-      done();
-    });
+      .request(server)
+      .post('/login')
+      .send({ username: 'NewUser', password: '123' })
+      .end((loginErr, loginRes) => {
+        expect(loginRes).to.have.status(200);
+
+        chai
+          .request(server)
+          .delete('/delete_user')
+          .query({ username: 'NewUser' }) // Use query() for passing parameters in DELETE requests
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            done();
+          });
+      });
   });
 
+  it('negative: /delete_user user does not exist', (done) => {
+    chai
+      .request(server)
+      .delete('/delete_user')
+      .query({ username: 'escensceINVALID' })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });
+  });
 });
-  
-
 
 
 //------------------------------------------HOME & ADMIN TEST CASES---------------------------------------\\
