@@ -243,11 +243,11 @@ app.get('/home', async (req, res) => {
   }
 });
 
-app.get('/learn', (req, res) => {
+app.get('/Learn', (req, res) => {
   if (req.session.user) {
-    return res.render('pages/learn.ejs', {loggedin: true});
+    return res.render('pages/Learn.ejs', {loggedin: true});
   }
-  res.render('pages/learn.ejs');
+  res.render('pages/Learn.ejs');
 });
 
 
