@@ -163,7 +163,8 @@ describe('Delete', () => {
 
 
 //------------------------------------------HOME & ADMIN TEST CASES---------------------------------------\\
-/*
+
+
 describe('Admin', () => {
   it('positive : /adminControls', done => {
     chai
@@ -174,6 +175,7 @@ describe('Admin', () => {
         done();
       });
   });
+
 
   it('positive : Home Page Update', done => {
     chai
@@ -186,6 +188,50 @@ describe('Admin', () => {
       });
   });
 
-}); */
+
+});
+
+
+//------------------------------------------REPORTS & USER TEST CASES---------------------------------------\\
+describe('Reports', () => {
+  it('positive : /reports page loads', done => {
+    chai
+      .request(server)
+      .get('/reports')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+
+  it('positive : /reports/add', done => {
+    chai
+      .request(server)
+      .post('/reports/add')
+      .send({observations: 'test', date: '03/23/2001'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+
+  it('postive : /updateuser', done => {
+    chai
+      .request(server)
+      .get('/edituser')
+      .send({username: 'test', email: 'test@gmail.com', password: 'test'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+
+
+
+});
+
 
 
