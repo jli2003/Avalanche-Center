@@ -8,11 +8,10 @@
   /* Your CSS styles go here */
   body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
+    background-color: #f0f8ff;
     margin: 0;
     padding: 0;
   }
-
 
   .user-profile {
     position: fixed;
@@ -76,6 +75,57 @@
     line-height: 1.6;
   }
 
+  .legend {
+    margin-top: 20px;
+    margin-left: 20px; /* Add margin to the left side */
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+
+  /* Add styles for each danger rating */
+  .danger-rating-1 {
+    background-color: green;
+  }
+
+  .danger-rating-2 {
+    background-color: yellow;
+  }
+
+  .danger-rating-3 {
+    background-color: orange;
+  }
+
+  .danger-rating-4 {
+    background-color: red;
+  }
+
+  .danger-rating-5 {
+    background-color: black;
+  }
+
+  .map-update-note {
+    color: #777;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+
+  .learn-link {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
 </style>
 
 <script src="/All%20Project%20code/src/resources/script.js"></script>
@@ -104,6 +154,32 @@
         <p>No data available.</p>
       <% } %>
     </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color danger-rating-1"></div>
+        <span>Low (1)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color danger-rating-2"></div>
+        <span>Moderate (2)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color danger-rating-3"></div>
+        <span>Considerable (3)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color danger-rating-4"></div>
+        <span>High (4)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color danger-rating-5"></div>
+        <span>Extreme (5)</span>
+      </div>
+    </div>
+
+    <div class="map-update-note">Note: The map is updated when the snowpack changes.</div>
+    <div class="map-update-note">For more information, <a class="learn-link" href="/learn">visit our Learn page</a>.</div>
   </div>
 </main>
 </html>

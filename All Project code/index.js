@@ -240,6 +240,10 @@ app.get('/home', async (req, res) => {
   }
 });
 
+app.get('/learn', (req, res) => {
+  res.render('pages/learn.ejs');
+});
+
 
 //------------------------------------Features not needing login-------------------------------------
 

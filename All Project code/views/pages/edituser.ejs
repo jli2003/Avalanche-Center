@@ -23,11 +23,15 @@
       padding: 20px;
     }
 
-    h1, h2 {
-      color: #4169e1; /* Royal blue text */
+    h1 {
+      color: #4d94ff; /* Darker blue text */
       margin-bottom: 20px;
     }
 
+    h2 {
+      color: #000000; /* Darker blue text */
+      font-size: 40px;
+    }
     form {
       width: 100%;
       max-width: 600px;
@@ -113,8 +117,8 @@
   </header>
 
   <main>
-    <h1>Edit details for user: <%= username %> </h1>
-
+    <h1>Edit details for user: </h1>
+    <h2><%= username %></h2>
     <form method="post" action="/updateuser">
 
       <label for="username">New Username:</label>
