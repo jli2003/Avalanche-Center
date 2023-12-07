@@ -10,25 +10,25 @@ INSERT INTO users (username, email, password, user_type) VALUES
 ('Earl', 'Earl@gmail.com','xxxx3', B'0');
 
 INSERT INTO user_reports (report_id, observations, date, image_path, location) VALUES
-(1, 'Observed signs of persistent slab instability on north-facing slopes above treeline', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1FI4D9-CU1ZCQeafpcw2bSXnu3Q5XI64i','N couloirs'),
-(2, 'Encountered wind slab conditions on exposed ridgelines', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1Agf_K7L7BFiMu6BASYhqkprQU8UKg8Zz', 'S ridge'),
-(3, 'Noted loose dry snow avalanches on steep, northerly aspects', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1XYtaQMHlFWZnIOQ_wQ-vBt-js4kH_Iqz', NULL),
-(4, 'weak layers near the ground contributed to the release of a large avalanche with a long-running crown', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1NqHVxzGzY_W6fcl-HMek6wGB3R5wZMn3', NULL),
-(5, 'Wet and Loose', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1JOAN9uWIQ449uytgLh1JfmdASEEnwCVi', 'SE Gully'),
-(6, 'Dry and solid', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1I_ud8GqZiprhYrJ23E2IR6DaubzDJiXL', 'NW'),
-(7, 'Powdery', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1FFwXQpFrFhlfQTI-V5Gvnz9iHFptqAJ3', NULL),
-(8, 'Wet point release', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1JVf94TDWzNwpXEpPXiChkBUga1WV1Ie7', 'Silver Couloir');
+(50, 'Observed signs of persistent slab instability on north-facing slopes above treeline', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1FI4D9-CU1ZCQeafpcw2bSXnu3Q5XI64i','N couloirs'),
+(51, 'Encountered wind slab conditions on exposed ridgelines', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1Agf_K7L7BFiMu6BASYhqkprQU8UKg8Zz', 'S ridge'),
+(52, 'Noted loose dry snow avalanches on steep, northerly aspects', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1XYtaQMHlFWZnIOQ_wQ-vBt-js4kH_Iqz', NULL),
+(53, 'weak layers near the ground contributed to the release of a large avalanche with a long-running crown', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1NqHVxzGzY_W6fcl-HMek6wGB3R5wZMn3', NULL),
+(54, 'Wet and Loose', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1JOAN9uWIQ449uytgLh1JfmdASEEnwCVi', 'SE Gully'),
+(55, 'Dry and solid', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1I_ud8GqZiprhYrJ23E2IR6DaubzDJiXL', 'NW'),
+(56, 'Powdery', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1FFwXQpFrFhlfQTI-V5Gvnz9iHFptqAJ3', NULL),
+(57, 'Wet point release', CURRENT_TIMESTAMP, 'https://drive.google.com/uc?id=1JVf94TDWzNwpXEpPXiChkBUga1WV1Ie7', 'Silver Couloir');
 
 
 INSERT INTO reports_to_user (username, report_id) VALUES 
-('Dave', 1),
-('Bobby', 2),
-('Earl', 3),
-('Dave', 4),
-('Earl', 5),
-('Dave', 6),
-('Bobby', 7),
-('Bobby', 8)
+('Dave', 50),
+('Bobby', 51),
+('Earl', 52),
+('Dave', 53),
+('Earl', 54),
+('Dave', 55),
+('Bobby', 56),
+('Bobby', 57)
 ;
 
 
