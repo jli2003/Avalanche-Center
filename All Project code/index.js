@@ -233,6 +233,9 @@ app.get('/home', async (req, res) => {
 
 
     // Render the home page with the fetched data
+    if (req.session.user) {
+      return res.render('pages/home.ejs', { latestAvyProblem, loggedin: true });
+    }
     res.render('pages/home.ejs', { latestAvyProblem });
   } catch (error) {
     console.error('Error', error);
@@ -241,6 +244,9 @@ app.get('/home', async (req, res) => {
 });
 
 app.get('/learn', (req, res) => {
+  if (req.session.user) {
+    return res.render('pages/learn.ejs', {loggedin: true});
+  }
   res.render('pages/learn.ejs');
 });
 
@@ -253,6 +259,11 @@ app.get('/reports', async (req, res) => {
     var query = 'SELECT * FROM users INNER JOIN reports_to_user'+
     ' on users.username = reports_to_user.username FULL JOIN user_reports ON user_reports.report_id = reports_to_user.report_id ORDER BY date DESC;' 
     const reports = await db.any(query);
+
+    if (req.session.user) {
+      return res.render('pages/reports', {report_data: reports, loggedin: true});
+    }
+
     res.render('pages/reports', {report_data: reports});
   } catch (error) {
     console.error('Error', error);
@@ -313,7 +324,7 @@ app.post("/reports/add", async (req, res) => {
 
   } catch (error) {
     console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
+    res.status(500).render('error', { message: 'Error', loggedin: true });
   }
 });
 
@@ -323,10 +334,10 @@ app.get('/edituser', async (req, res) => {
     // Render the change user page
     const emailq = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
     const theemail = await db.oneOrNone(emailq, [req.session.user]);
-    res.render('pages/edituser.ejs', {username: req.session.user, email: theemail });
+    res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, loggedin: true });
   } catch (error) {
     console.error('Error', error);
-    res.status(500).render('error', { message: 'Error loading reports page' });
+    res.status(500).render('error', { message: 'Error loading reports page', loggedin: true });
   }
 });
 
@@ -344,12 +355,12 @@ app.post('/updateuser', async (req, res) => {
     if (username && username != '' ) {
       if (username === req.session.user) {
         
-        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username cannot be the same!" });
+        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username cannot be the same!", loggedin: true });
       }
       //check if the username already exists
       const checkem = await db.any('SELECT * FROM users WHERE username = $1;', [username]);
       if (checkem.length > 0) {
-        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username already exists pls choose another!" });
+        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Username already exists pls choose another!", loggedin: true });
       }
       if (!(query == '')) {
         query += ', username = $1';
@@ -360,7 +371,7 @@ app.post('/updateuser', async (req, res) => {
 
     if (email && email != '') {
       if (email == theemail.email) {
-        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Email cannot be the same!" });
+        return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Email cannot be the same!", loggedin: true });
       }
       if (!(query == '')) {
         query += ', email = $2';
@@ -378,7 +389,7 @@ app.post('/updateuser', async (req, res) => {
     }
 
     if (!query || query == '') {
-      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Please enter a field!" });
+      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "Please enter a field!", loggedin: true});
     }
     
     query += ' where username = $4 RETURNING *;';
@@ -413,16 +424,16 @@ app.post('/updateuser', async (req, res) => {
       }
       const emailnew = 'SELECT email FROM users WHERE username = $1 LIMIT 1;';
       const theemailnew = await db.oneOrNone(emailnew, [req.session.user]);
-      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemailnew, message: mess });
+      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemailnew, message: mess, loggedin: true });
     } else {
-      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "failed!" });
+      return res.render('pages/edituser.ejs', {username: req.session.user, email: theemail, message: "failed!", loggedin: true });
     }
 
     // Redirect to home page after the update
 
   } catch (error) {
     console.error('Error', error);
-    res.status(500).render('error', { message: 'Error' });
+    res.status(500).render('error', { message: 'Error', loggedin: true });
   }
 });
 
