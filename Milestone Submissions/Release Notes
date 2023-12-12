@@ -7,3 +7,14 @@ Version 1.02
 - Navigation between login and home pages
 - Fixed: docker-compose statement not running for everyone (npm run -> start)
 - Added link: http://recitation-012-team-02.eastus.cloudapp.azure.com:3000/register
+
+
+Version 1.03
+-Fully functioning site with all primary features completed.
+-Home page modifiable
+-Added Learn page
+-User can view and crate avalanche reports.
+-User profile customization
+-Admin controls added
+-Consistent styling added
+-Init data set up
